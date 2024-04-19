@@ -1,21 +1,22 @@
 const fs = require('fs');
 const path = require('path');
-const template = require('art-template');
-
+const { readTemplateFile, generatedTemplateFile, } = require('./src/utils/renderTemplateFile')
 
 const UserTable = require('./src/model/user.json');
 
-// 数据模型
 
-// 读取模板文件
-const templatePath = path.join(`${__dirname}/src/template/web`, 'proTable.txt');
-const templateContent = fs.readFileSync(templatePath, 'utf-8');
-
+const templateContent = readTemplateFile({
+  targetPath: `${__dirname}/src/template/web`,
+  name: 'proTable.txt'
+})
 // 使用 art-template 渲染模板
-const generatedCode = template.render(templateContent, UserTable);
+const generatedCode = generatedTemplateFile({
+  templateContent: templateContent,
+  data: UserTable
+})
 
 // 创建 output 文件夹（如果不存在）
-const outputDir = path.join(__dirname, 'output');
+const outputDir = path.join(__dirname, 'output/template');
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir);
 }
