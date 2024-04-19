@@ -9,7 +9,7 @@ module.exports = {
       "templateName": "proTable.txt",
       "outSuffix": ".js",
       "outPath": "/src/template/web",
-      'targetPath': 'output/template',
+      'targetPath': '/output/template',
       "dataSource": UserTable
       //覆盖文件
       // overwrite: true
