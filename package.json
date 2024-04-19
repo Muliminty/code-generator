@@ -1,0 +1,11 @@
+{
+  "name": "code-generator",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "art-template": "^4.13.2"
+  }
+}
