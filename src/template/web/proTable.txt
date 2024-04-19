@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Table, Button, Modal, Form, Input } from 'antd';
 
-const {{ tableName }} = ({ dataSource, columns, onCreate, onDelete, onUpdate }) => {
+const {{ tableName }} = ({ dataSource, onCreate, onDelete, onUpdate }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formData, setFormData] = useState({});
   const [form] = Form.useForm();
@@ -43,8 +43,13 @@ const {{ tableName }} = ({ dataSource, columns, onCreate, onDelete, onUpdate }) 
     });
   };
 
-  const columnsWithActions = [
-    ...columns,
+  const columns = [
+    {{each columns}}
+    {
+      "title": {{$value.title}},
+      "dataIndex": {{$value.dataIndex}}
+    },
+    {{/each}}
     {
       title: '操作',
       dataIndex: 'action',
@@ -61,7 +66,7 @@ const {{ tableName }} = ({ dataSource, columns, onCreate, onDelete, onUpdate }) 
     <>
       <Table
         dataSource={dataSource}
-        columns={columnsWithActions}
+        columns={columns}
         // 可根据需要添加其他属性
       />
       <Modal
