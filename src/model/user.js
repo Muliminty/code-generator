@@ -1,5 +1,6 @@
-{
-  "tableName": "UserTable",
+
+const date = {
+  "tableName": "UserTable",// 表格组件名
   "columns": [
     {
       "title": "ID",
@@ -15,3 +16,6 @@
     }
   ]
 }
+module.exports = {
+  date
+};

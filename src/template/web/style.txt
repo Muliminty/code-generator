@@ -1,0 +1,9 @@
+.main-content {
+  overflow-y: hidden !important;
+}
+
+.{{ tableName }} {
+  background: #fff;
+  width: 100%;
+  height: 100%;
+}
