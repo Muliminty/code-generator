@@ -23,6 +23,13 @@ module.exports = {
     }
   ],
   templatesService: [
-
+    {
+      "templateName": "javaTmp.txt",// 读取的模板文件名
+      "fileName": "javaTmp",// 生成文件名
+      "outSuffix": ".java",// 生成文件后缀
+      "outPath": "/src/template/service",// 模板路径
+      'targetPath': '/output/template/service',// 生成路径
+      "dataSource": date
+    }
   ]
 };

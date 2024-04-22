@@ -4,15 +4,18 @@ const date = {
   "columns": [
     {
       "title": "ID",
-      "dataIndex": "id"
+      "dataIndex": "id",
+      'dataType': 'Long'
     },
     {
       "title": "用户名",
-      "dataIndex": "username"
+      "dataIndex": "username",
+      'dataType': 'String'
     },
     {
       "title": "邮箱",
-      "dataIndex": "email"
+      "dataIndex": "email",
+      'dataType': 'Long'
     }
   ]
 }
