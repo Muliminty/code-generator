@@ -2,6 +2,7 @@
   "name": "code-generator",
   "version": "0.0.0",
   "private": true,
+  "author": "Muliminty <muliminty@qq.com>",
   "scripts": {
     "build": "node build.js"
   },
