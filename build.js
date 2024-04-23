@@ -62,7 +62,7 @@ const processTemplates = () => {
       // 将生成的代码写入文件
       const outputPath = path.join(
         `${__dirname}${i.targetPath}`,// 生成路径
-        `${[i.fileName]}${i.outSuffix}`);// 生成文件名
+        `${[i.dataSource.modelName]}${[i.fileName]}${i.outSuffix}`);// 生成文件名
 
       fs.writeFileSync(outputPath, generatedCode, 'utf-8');
 
