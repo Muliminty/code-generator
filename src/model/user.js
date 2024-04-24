@@ -1,7 +1,7 @@
 
 const data = {
-  "modelName": "User",// 模块名
-  "tableName": "UserTable",// 表格组件名
+  "modelName": "user",// java模块名
+  "tableName": "UserTable",// 前端组件名
   "columns": [
     {
       "title": "ID",

@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { Table, Button, Modal, Form, Input } from 'antd';
 
-const {{ tableName }} = ({ dataSource, onCreate, onDelete, onUpdate }) => {
+const {{ modelName | pascal }} = ({ dataSource, onCreate, onDelete, onUpdate }) => {
+  // {{tableName | style}}
+  // {{tableName | camel}}
+  // {{tableName | pascal}}
+  // {{tableName | hyphen}}
+  // {{tableName | constant}}
+  // {{tableName | snake}}
+  // {{tableName | underscore}}
+  // {{tableName | setence}}
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [formData, setFormData] = useState({});
   const [form] = Form.useForm();
@@ -97,4 +105,4 @@ const {{ tableName }} = ({ dataSource, onCreate, onDelete, onUpdate }) => {
   );
 };
 
-export default {{ tableName }};
+export default {{ modelName | pascal }};

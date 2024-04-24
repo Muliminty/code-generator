@@ -28,7 +28,7 @@ module.exports = {
       "fileName": "Controller",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/controller",// 模板路径
-      'targetPath': '/output/template/service/controller',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/controller`,// 生成路径
       "dataSource": data
     },
     {
@@ -36,7 +36,7 @@ module.exports = {
       "fileName": "Dao",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/dao",// 模板路径
-      'targetPath': '/output/template/service/dao',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/dao`,// 生成路径
       "dataSource": data
     },
     {
@@ -44,7 +44,7 @@ module.exports = {
       "fileName": '',// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/model",// 模板路径
-      'targetPath': '/output/template/service/model',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/model`,// 生成路径
       "dataSource": data
     },
     {
@@ -52,7 +52,7 @@ module.exports = {
       "fileName": "Service",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/service",// 模板路径
-      'targetPath': '/output/template/service/service',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/service`,// 生成路径
       "dataSource": data
     },
     {
@@ -60,7 +60,7 @@ module.exports = {
       "fileName": "ServiceImpl",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/service/impl",// 模板路径
-      'targetPath': '/output/template/service/service/impl',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/service/impl`,// 生成路径
       "dataSource": data
     },
     {
@@ -68,7 +68,7 @@ module.exports = {
       "fileName": "ConditionVo",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
-      'targetPath': '/output/template/service/vo',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/vo`,// 生成路径
       "dataSource": data
     },
     {
@@ -76,7 +76,7 @@ module.exports = {
       "fileName": "CreateVo",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
-      'targetPath': '/output/template/service/vo',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/vo`,// 生成路径
       "dataSource": data
     },
     {
@@ -84,7 +84,7 @@ module.exports = {
       "fileName": "GetVo",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
-      'targetPath': '/output/template/service/vo',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/vo`,// 生成路径
       "dataSource": data
     },
     {
@@ -92,7 +92,7 @@ module.exports = {
       "fileName": "PageVo",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
-      'targetPath': '/output/template/service/vo',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/vo`,// 生成路径
       "dataSource": data
     },
     {
@@ -100,7 +100,7 @@ module.exports = {
       "fileName": "UpdateVo",// 生成文件名
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
-      'targetPath': '/output/template/service/vo',// 生成路径
+      'targetPath': `/output/template/service/${data.modelName}/vo`,// 生成路径
       "dataSource": data
     },
   ]
