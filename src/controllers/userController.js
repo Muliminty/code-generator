@@ -1,6 +1,29 @@
 const User = require('../model/userModel');
 
 const userController = {
+  // 分页查询用户
+  getUsersByPage: (req, res) => {
+    try {
+      console.log('req: ', req);
+      // 从查询参数中获取页码和每页条目数量
+      const page = Number(req.query.page);
+      const pageSize = Number(req.query.pageSize);
+
+      // 调用 User 模型中的 getByPage 方法进行分页查询
+      User.getByPage(page, pageSize, (err, users) => {
+        if (err) {
+          // 如果出现错误，返回 500 状态码并发送错误消息
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        // 如果成功获取用户，以 JSON 格式返回用户数据
+        res.json(users);
+      });
+    } catch (error) {
+      // 捕获其他未处理的错误并返回 500 状态码
+      res.status(500).json({ error: error.message });
+    }
+  },
   // 获取所有用户
   getAllUsers: (req, res) => {
     // 调用 User 模型中的 getAll 方法从数据库中获取所有用户

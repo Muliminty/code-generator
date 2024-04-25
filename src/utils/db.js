@@ -48,6 +48,8 @@ const sqlite3 = require('sqlite3').verbose();
 
 const DB_PATH = './db/user.db';
 
+const { createTable } = require('../model/dbModel');
+
 const USER_TABLE = [
   { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
   { name: 'username', type: 'TEXT' },
@@ -68,10 +70,20 @@ const db = new sqlite3.Database(
     } else {
       console.log('成功连接到数据库');
       // 创建表格（如果表格不存在）
-      createTable('users', USER_TABLE).then(() => {
-        console.log('用户表已创建');
-      }).catch((err) => {
-        console.error('创建用户表失败：', err);
+      // createTable('users', USER_TABLE).then(() => {
+      //   console.log('用户表已创建');
+      // }).catch((err) => {
+      //   console.error('创建用户表失败：', err);
+      // });
+      const tableName = 'users';
+      const columnDefs = USER_TABLE.map(USER_TABLE => `${USER_TABLE.name} ${USER_TABLE.type}`).join(', ');
+      const sql = `CREATE TABLE IF NOT EXISTS ${tableName} (${columnDefs})`;
+      db.run(sql, (err) => {
+        if (err) {
+          console.error('创建用户表失败：', err);
+        } else {
+          console.log('用户表已创建');
+        }
       });
     }
   });

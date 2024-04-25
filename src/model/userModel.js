@@ -1,6 +1,13 @@
 const { db } = require('../utils/db');
 
 const User = {
+  // 分页查询用户
+  getByPage: (page, pageSize, callback) => {
+    // 计算查询偏移量
+    const offset = (page - 1) * pageSize;
+    // 使用 db 模块的 all 方法执行 SQL 查询，根据分页参数获取用户数据
+    db.all('SELECT * FROM users LIMIT ? OFFSET ?', [pageSize, offset], callback);
+  },
   // 获取所有用户
   getAll: (callback) => {
     // 使用 db 模块的 all 方法执行 SQL 查询，从数据库中获取所有用户数据
