@@ -29,6 +29,7 @@ const processTemplates = ({
   templates,
   templatesService,
 }) => {
+  console.log('dataSource: ', dataSource);
 
   templates.forEach((i) => {
     try {
@@ -68,7 +69,8 @@ const processTemplates = ({
     try {
       const fileName = `${pascal(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`// 生成文件名
       // 生成到当前项目 路径
-      const templatePath = `${__dirname}${i.targetPath}/${pascal(dataSource.modelName)}${[i.fileName]}`
+      const templatePath = `${__dirname}${i.targetPath}`
+      console.log('templatePath: ', templatePath);
 
       // 创建文件夹路径
       const outputDir = path.join(templatePath);

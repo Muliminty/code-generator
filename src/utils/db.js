@@ -1,5 +1,13 @@
 const sqlite3 = require('sqlite3').verbose();
 const DB_PATH = './db/database.db';// 数据库文件路径
+// 代码生成测试用
+const USER_TABLE = [
+  { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
+  { name: 'title', type: 'TEXT' },
+  { name: 'dataIndex', type: 'TEXT' },
+  { name: 'dataType', type: 'TEXT' },
+  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
+]
 
 // 模块表
 const MODULE_TABLE = [
@@ -66,6 +74,7 @@ async function createTables() {
     console.log('成功创建模型表');
     await createTable('code_model_props', MODEL_PROPS_TABLE);
     console.log('成功创建模型属性表');
+    await createTable('users', USER_TABLE);
   } catch (error) {
     console.error('创建表格失败：', error);
   }
