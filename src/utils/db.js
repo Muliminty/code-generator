@@ -76,34 +76,6 @@ const db = new sqlite3.Database(
     }
   });
 
-// 创建表格
-function createTable(tableName, columns) {
-  return new Promise((resolve, reject) => {
-    const columnDefs = columns.map(column => `${column.name} ${column.type}`).join(', ');
-    const sql = `CREATE TABLE IF NOT EXISTS ${tableName} (${columnDefs})`;
-    db.run(sql, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
-
-// 删除表格
-function dropTable(tableName) {
-  return new Promise((resolve, reject) => {
-    const sql = `DROP TABLE IF EXISTS ${tableName}`;
-    db.run(sql, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
 
 // 关闭数据库连接
 function closeConnection() {
@@ -121,7 +93,5 @@ function closeConnection() {
 
 module.exports = {
   db: db,
-  createTable: createTable,
-  dropTable: dropTable,
   closeConnection: closeConnection
 };
