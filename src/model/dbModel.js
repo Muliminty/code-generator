@@ -45,6 +45,8 @@ function insertData(tableName, data) {
   });
 }
 
+// SELECT t.name,f.name FROM code_model t left join code_module f on f.id = t.moduleId  where t.id = 1
+
 // 查询数据
 function fetchData(tableName, conditions = {}) {
   return new Promise((resolve, reject) => {

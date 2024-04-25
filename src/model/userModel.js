@@ -14,9 +14,9 @@ const User = {
     db.all('SELECT * FROM users', callback);
   },
   // 创建用户
-  create: (username, email, callback) => {
+  create: (title, dataIndex, dataType, callback) => {
     // 使用 db 模块的 run 方法执行 SQL 插入语句，向 users 表中插入新用户的用户名、邮箱和创建时间
-    db.run('INSERT INTO users (username, email, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)', [username, email], callback);
+    db.run('INSERT INTO users (title, dataIndex, dataType, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP)', [title, dataIndex, dataType], callback);
   },
 
   // 更新用户信息

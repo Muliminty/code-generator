@@ -40,10 +40,10 @@ const userController = {
   // 创建用户
   createUser: (req, res) => {
     // 从请求体中获取用户名和邮箱
-    const { username, email } = req.query;
+    const { title, dataIndex, dataType } = req.query;
     console.log('req.query: ', req.query);
     // 调用 User 模型中的 create 方法创建新用户
-    User.create(username, email, (err) => {
+    User.create(title, dataIndex, dataType, (err) => {
       if (err) {
         // 如果出现错误，返回 500 状态码并发送错误消息
         res.status(500).json({ error: err.message });

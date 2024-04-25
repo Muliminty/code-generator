@@ -13,6 +13,8 @@ const {
 } = require('naming-style')
 const template = require('art-template');
 
+const { data } = require('./src/model/user')
+
 template.defaults.imports.style = style
 template.defaults.imports.camel = camel
 template.defaults.imports.pascal = pascal
@@ -22,7 +24,11 @@ template.defaults.imports.snake = snake
 template.defaults.imports.underscore = underscore
 
 
-const processTemplates = () => {
+const processTemplates = ({
+  dataSource,
+  templates,
+  templatesService,
+}) => {
 
   templates.forEach((i) => {
     try {
@@ -34,7 +40,7 @@ const processTemplates = () => {
       // 使用 art-template 渲染模板
       const generatedCode = generatedTemplateFile({
         templateContent: templateContent,
-        data: i.dataSource
+        data: dataSource
       })
 
       // 创建文件夹
@@ -60,12 +66,12 @@ const processTemplates = () => {
 
   templatesService.forEach((i) => {
     try {
-      const fileName = `${pascal(i.dataSource.modelName)}${[i.fileName]}${i.outSuffix}`// 生成文件名
+      const fileName = `${pascal(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`// 生成文件名
       // 生成到当前项目 路径
-      const templatePath = `${__dirname}${i.targetPath}/${pascal(i.dataSource.modelName)}${[i.fileName]}`
+      const templatePath = `${__dirname}${i.targetPath}/${pascal(dataSource.modelName)}${[i.fileName]}`
 
       // 创建文件夹路径
-      const outputDir = path.join(ssoPath);
+      const outputDir = path.join(templatePath);
 
       // 读取模板文件
       const templateContent = readTemplateFile({
@@ -77,7 +83,7 @@ const processTemplates = () => {
       const generatedCode = generatedTemplateFile({
         templateContent: templateContent,
         data: {
-          dataSource: i.dataSource,
+          dataSource: dataSource,
           config: templatesService
         }
       })
@@ -103,4 +109,10 @@ const processTemplates = () => {
   })
 }
 
-processTemplates()
+(async () => {
+  processTemplates({
+    dataSource: await data(),
+    templates,
+    templatesService
+  })
+})()
