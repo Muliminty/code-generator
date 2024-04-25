@@ -61,8 +61,6 @@ const processTemplates = () => {
   templatesService.forEach((i) => {
     try {
       const fileName = `${pascal(i.dataSource.modelName)}${[i.fileName]}${i.outSuffix}`// 生成文件名
-      // 生成到sso项目 路径
-      const ssoPath = `E:/Project2/zlink-sso/src/main/java/com/zkteco/zlink/${i.dataSource.modelName}/${i.targetPath.split(`${i.dataSource.modelName}/`)[1]}`
       // 生成到当前项目 路径
       const templatePath = `${__dirname}${i.targetPath}/${pascal(i.dataSource.modelName)}${[i.fileName]}`
 
