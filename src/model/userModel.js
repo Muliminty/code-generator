@@ -15,9 +15,10 @@ const User = {
   },
   // 创建用户
   create: (username, email, callback) => {
-    // 使用 db 模块的 run 方法执行 SQL 插入语句，向 users 表中插入新用户的用户名和邮箱
-    db.run('INSERT INTO users (username, email) VALUES (?, ?)', [username, email], callback);
+    // 使用 db 模块的 run 方法执行 SQL 插入语句，向 users 表中插入新用户的用户名、邮箱和创建时间
+    db.run('INSERT INTO users (username, email, created_at) VALUES (?, ?, CURRENT_TIMESTAMP)', [username, email], callback);
   },
+
   // 更新用户信息
   update: (id, username, email, callback) => {
     // 使用 db 模块的 run 方法执行 SQL 更新语句，更新指定 ID 的用户的用户名和邮箱

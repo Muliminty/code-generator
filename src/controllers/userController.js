@@ -41,6 +41,7 @@ const userController = {
   createUser: (req, res) => {
     // 从请求体中获取用户名和邮箱
     const { username, email } = req.query;
+    console.log('req.query: ', req.query);
     // 调用 User 模型中的 create 方法创建新用户
     User.create(username, email, (err) => {
       if (err) {
