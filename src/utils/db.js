@@ -1,12 +1,12 @@
 const sqlite3 = require('sqlite3').verbose();
-const DB_PATH = './db/user.db';// 数据库文件路径
+const DB_PATH = './db/database.db';// 数据库文件路径
 
 // 模块表
 const MODULE_TABLE = [
   { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
   { name: 'code', type: 'TEXT' },
   { name: 'name', type: 'TEXT' },
-  { name: 'sortNum', type: 'TEXT' },
+  { name: 'sortNum', type: 'INTEGER' },
   { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
 ];
 
