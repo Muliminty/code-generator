@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "art-template": "^4.13.2",
+    "body-parser": "^1.20.2",
     "express": "^4.19.2",
     "naming-style": "^1.0.1",
     "sqlite3": "^5.1.7"

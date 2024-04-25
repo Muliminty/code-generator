@@ -1,13 +1,21 @@
 const express = require('express');
+const userRoutes = require('./src/routes/userRoutes');
+const db = require('./src/utils/db');
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
+const bodyParser = require('body-parser');
 
-// 定义一个 GET 请求的路由
-app.get('/api/hello', (req, res) => {
-  res.send('Hello, World!');
-});
+// 使用 body-parser 中间件来解析 URL 编码和 JSON 格式的请求主体
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-// 监听端口
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+// 解析 JSON 格式的请求主体
+app.use(express.json());
+
+// 将用户路由映射到 /users 路径
+app.use('/users', userRoutes);
+
+// 启动服务器，监听指定的端口
+app.listen(PORT, () => {
+  console.log(`服务器正在端口上运行 http://localhost:${PORT}`);
 });
