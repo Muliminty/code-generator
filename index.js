@@ -1,6 +1,7 @@
 const express = require('express');
 const userRoutes = require('./src/routes/userRoutes');
 const moduleRoutes = require('./src/routes/moduleRoutes');
+const modelRoutes = require('./src/routes/modelRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,9 @@ app.use('/users', userRoutes);
 
 // 将模块路由映射到 /module 路径
 app.use('/module', moduleRoutes);
+
+// 将模型路由映射到 /model 路径
+app.use('/model', modelRoutes);
 
 
 // 启动服务器，监听指定的端口

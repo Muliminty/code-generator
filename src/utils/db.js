@@ -23,8 +23,8 @@ const MODEL_TABLE = [
   { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
   { name: 'name', type: 'TEXT' },
   { name: 'remark', type: 'TEXT' },
-  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
   { name: 'moduleId', type: 'INTEGER' },
+  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
 ];
 
 // 模型属性表

@@ -1,7 +1,7 @@
 const { db } = require('../utils/db');
 
 const Module = {
-  // 分页查询模块
+  // 分页查询模块  
   getByPage: (page, pageSize, callback) => {
     // 计算查询偏移量
     const offset = (page - 1) * pageSize;
