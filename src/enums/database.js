@@ -19,17 +19,7 @@
  * @property {string} type - 列类型
  */
 
-/**
- * 用户表
- * @type {UserTable}
- */
-const USER_TABLE = [
-  { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' }, // 用户ID
-  { name: 'title', type: 'TEXT' }, // 标题
-  { name: 'dataIndex', type: 'TEXT' }, // 数据索引
-  { name: 'dataType', type: 'TEXT' }, // 数据类型
-  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }, // 创建时间
-];
+
 
 /**
  * 模块表
@@ -72,6 +62,18 @@ const MODEL_PROPS_TABLE = [
   { name: 'showInForm', type: 'INTEGER' },
   // 是否表单必填
   { name: 'required', type: 'INTEGER' },
+  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }, // 创建时间
+];
+
+
+/**
+ * 一个模型属性demo
+ */
+const USER_TABLE = [
+  { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' }, // 用户ID
+  { name: 'title', type: 'TEXT' }, // 标题
+  { name: 'dataIndex', type: 'TEXT' }, // 数据索引
+  { name: 'dataType', type: 'TEXT' }, // 数据类型
   { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }, // 创建时间
 ];
 
