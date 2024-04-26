@@ -4,7 +4,7 @@ const userController = {
   // 分页查询用户
   getUsersByPage: (req, res) => {
     try {
-      console.log('req: ', req);
+      debugger
       // 从查询参数中获取页码和每页条目数量
       const page = Number(req.query.page);
       const pageSize = Number(req.query.pageSize);

@@ -1,43 +1,7 @@
+const { MODULE_TABLE, MODEL_TABLE, MODEL_PROPS_TABLE, USER_TABLE } = require('../enums/database');
+
 const sqlite3 = require('sqlite3').verbose();
 const DB_PATH = './db/database.db';// 数据库文件路径
-// 代码生成测试用
-const USER_TABLE = [
-  { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
-  { name: 'title', type: 'TEXT' },
-  { name: 'dataIndex', type: 'TEXT' },
-  { name: 'dataType', type: 'TEXT' },
-  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
-]
-
-// 模块表
-const MODULE_TABLE = [
-  { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
-  { name: 'code', type: 'TEXT' },
-  { name: 'name', type: 'TEXT' },
-  { name: 'sortNum', type: 'INTEGER' },
-  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
-];
-
-// 模型表
-const MODEL_TABLE = [
-  { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
-  { name: 'name', type: 'TEXT' },
-  { name: 'remark', type: 'TEXT' },
-  { name: 'moduleId', type: 'INTEGER' },
-  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
-];
-
-// 模型属性表
-const MODEL_PROPS_TABLE = [
-  { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' },
-  { name: 'name', type: 'TEXT' },
-  { name: 'remark', type: 'TEXT' },
-  { name: 'dataType', type: 'TEXT' },
-  { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' },
-  { name: 'modelId', type: 'INTEGER' },
-];
-
-
 const db = new sqlite3.Database(DB_PATH, (err) => {
   if (err) {
     console.error('连接数据库失败：', err);
@@ -47,15 +11,34 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
   }
 });
 
+/**
+ * 创建数据库表格
+ * @param {string} tableName - 表格名称
+ * @param {MODULE_TABLE} columns - 列定义
+ * @returns {Promise<void>} - 返回一个 Promise，表示表格创建操作的结果
+ */
 function createTable(tableName, columns) {
   return new Promise((resolve, reject) => {
+    // 检查参数的有效性
     if (!tableName || !Array.isArray(columns) || columns.length === 0) {
-      reject(new Error('Invalid table name or columns'));
+      reject(new Error('无效的表名或列'));
       return;
     }
 
-    const columnDefs = columns.map(column => `${column.name} ${column.type}`).join(', ');
+    // 构建列定义字符串
+    const columnDefs = columns.map(column => {
+      let columnDef = `${column.name} ${column.type}`;
+      // 检查是否需要自增
+      if (column.autoIncrement === 'AUTOINCREMENT') {
+        columnDef += ' AUTOINCREMENT';
+      }
+      return columnDef;
+    }).join(', ');
+
+    // 构建创建表格的 SQL 语句
     const sql = `CREATE TABLE IF NOT EXISTS ${tableName} (${columnDefs})`;
+
+    // 执行 SQL 语句来创建表格
     db.run(sql, (err) => {
       if (err) {
         reject(err);
@@ -65,6 +48,7 @@ function createTable(tableName, columns) {
     });
   });
 }
+
 
 async function createTables() {
   try {

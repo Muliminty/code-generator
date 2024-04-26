@@ -5,7 +5,8 @@
   "author": "Muliminty <muliminty@qq.com>",
   "scripts": {
     "build": "node build.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "log": "node inspect index.js"
   },
   "dependencies": {
     "art-template": "^4.13.2",
