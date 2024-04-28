@@ -29,7 +29,7 @@ const MODULE_TABLE = [
   { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' }, // 模块ID
   { name: 'code', type: 'TEXT' }, // 模块编码
   { name: 'name', type: 'TEXT' }, // 模块名称
-  { name: 'sortNum', type: 'INTEGER', autoIncrement: 'AUTOINCREMENT' }, // 排序号（自增）
+  { name: 'sortNum', type: 'INTEGER', autoIncrement: 'INTEGER' }, // 排序号（自增）
   { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }, // 创建时间
 ];
 

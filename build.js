@@ -29,7 +29,6 @@ const processTemplates = ({
   templates,
   templatesService,
 }) => {
-  console.log('dataSource: ', dataSource);
 
   templates.forEach((i) => {
     try {

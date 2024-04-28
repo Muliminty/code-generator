@@ -5,22 +5,32 @@ const modelPropsController = {
   getModelPropsByPage: (req, res) => {
     try {
       // 从查询参数中获取页码和每页条目数量
-      const page = Number(req.query.page);
-      const pageSize = Number(req.query.pageSize);
-
-      // 调用 ModelProps 模型中的 getByPage 方法进行分页查询
+      const page = Number(req.query.page) || 0;
+      const pageSize = Number(req.query.pageSize) || 10;
+      // 调用 Model 模型中的 getByPage 方法进行分页查询
       ModelProps.getByPage(page, pageSize, (err, props) => {
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
-          res.status(500).json({ error: err.message });
-          return;
+          return res.status(500).json({ code: 'error', message: err.message });
         }
-        // 如果成功获取模型属性，以 JSON 格式返回模型属性数据
-        res.json(props);
+        // 构建返回数据格式
+        const totalCount = props.totalCount; // 假设这里是获取总记录数的方法
+        const totalPages = Math.ceil(totalCount / pageSize);
+        const currentPage = page;
+        const data = {
+          totalCount,
+          currentPage,
+          totalPages,
+          pageSize,
+          list: props.list
+        };
+
+        // 返回成功状态和数据
+        res.json({ code: 'success', data, message: '成功' });
       });
     } catch (error) {
       // 捕获其他未处理的错误并返回 500 状态码
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ code: 'error', message: error.message });
     }
   },
   // 获取所有模型属性

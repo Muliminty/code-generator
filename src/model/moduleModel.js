@@ -2,11 +2,31 @@ const { db } = require('../utils/db');
 
 const Module = {
   // 分页查询模块  
+  // getByPage: (page, pageSize, callback) => {
+  //   // 计算查询偏移量
+  //   const offset = (page - 1) * pageSize;
+  //   // 使用 db 模块的 all 方法执行 SQL 查询，根据分页参数获取模块数据
+  //   db.all('SELECT * FROM code_module LIMIT ? OFFSET ?', [pageSize, offset], callback);
+  // },
   getByPage: (page, pageSize, callback) => {
-    // 计算查询偏移量
-    const offset = (page - 1) * pageSize;
-    // 使用 db 模块的 all 方法执行 SQL 查询，根据分页参数获取模块数据
-    db.all('SELECT * FROM code_module LIMIT ? OFFSET ?', [pageSize, offset], callback);
+    // 查询总记录数
+    db.get('SELECT COUNT(*) AS total FROM code_module', (err, row) => {
+      if (err) {
+        callback(err, null);
+      } else {
+        const totalCount = row.total;
+        // 计算查询偏移量
+        const offset = (page - 1) * pageSize;
+        // 使用 db 模块的 all 方法执行 SQL 查询，根据分页参数获取模块数据
+        db.all('SELECT * FROM code_module LIMIT ? OFFSET ?', [pageSize, offset], (err, rows) => {
+          if (err) {
+            callback(err, null);
+          } else {
+            callback(null, { totalCount, list: rows });
+          }
+        });
+      }
+    });
   },
   // 获取所有模块
   getAll: (callback) => {
