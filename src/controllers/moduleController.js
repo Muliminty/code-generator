@@ -50,6 +50,7 @@ const moduleController = {
   createModule: (req, res) => {
     // 从请求体中获取模块名和邮箱
     const { code, name } = req.query;
+    console.log('req.query: ', req.query);
     // 调用 Module 模型中的 create 方法创建新模块
     Module.create(code, name, (err) => {
       if (err) {
@@ -58,7 +59,7 @@ const moduleController = {
         return;
       }
       // 如果成功创建模块，发送成功消息
-      res.send('Module created successfully');
+      res.json({ code: 'success', data: {}, message: '成功' });
     });
   },
   // 更新模块信息
@@ -79,7 +80,7 @@ const moduleController = {
           return;
         }
         // 如果成功更新模块信息，发送成功消息
-        res.send('Module updated successfully');
+        res.json({ code: 'success', data: {}, message: '成功' });
       });
     } catch (error) {
       // 捕获其他未处理的错误并返回 500 状态码
@@ -99,7 +100,7 @@ const moduleController = {
         return;
       }
       // 如果成功删除模块，发送成功消息
-      res.send('Module deleted successfully');
+      res.json({ code: 'success', data: {}, message: '成功' });
     });
   }
 };

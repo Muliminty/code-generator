@@ -71,9 +71,9 @@ const Model = {
    * @param {number} moduleId - 模块ID
    * @param {function} callback - 回调函数
    */
-  update: (id, name, remark, moduleId, callback) => {
-    const sql = 'UPDATE code_model SET name = ?, remark = ?, moduleId = ? WHERE id = ?';
-    db.run(sql, [name, remark, moduleId, id], (err) => {
+  update: (id, engName, remark, moduleId, callback) => {
+    const sql = 'UPDATE code_model SET engName = ?, remark = ?, moduleId = ? WHERE id = ?';
+    db.run(sql, [engName, remark, moduleId, id], (err) => {
       if (err) {
         callback(err);
         return;
