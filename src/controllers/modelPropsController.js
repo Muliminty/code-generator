@@ -1,5 +1,7 @@
 const ModelProps = require('../model/modelPropsModel');
 
+
+
 const modelPropsController = {
   // 分页查询模型属性
   getModelPropsByPage: (req, res) => {
@@ -74,10 +76,10 @@ const modelPropsController = {
       const id = Number(req.params.id);
 
       // 从请求体中获取新的模型属性名和邮箱
-      const { name, remark, moduleId } = req.query;
+      const { engName, title, dataType, dataLength, showInSearch, showInForm, required } = req.query;
 
       // 调用 ModelProps 模型中的 update 方法更新模型属性信息
-      ModelProps.update(id, name, remark, moduleId, (err) => {
+      ModelProps.update(id, { engName, title, dataType, dataLength, showInSearch, showInForm, required }, (err) => {
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
           res.status(500).json({ error: err.message });
@@ -106,7 +108,9 @@ const modelPropsController = {
       // 如果成功删除模型属性，发送成功消息
       res.send('ModelProps deleted successfully');
     });
-  }
+  },
+
+
 };
 
 module.exports = modelPropsController;

@@ -24,8 +24,8 @@ function {{ modelName | pascal }}() {
   const columns = [
     {{each columns}}
     {
-      "title": {{$value.title}},
-      "dataIndex": {{$value.dataIndex}}
+      "title": '{{$value.title}}',
+      "dataIndex": '{{$value.engName}}'
     },
     {{/each}}
     // {

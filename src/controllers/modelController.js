@@ -1,5 +1,8 @@
 const Model = require('../model/modelModel');
-
+const ModuleProps = require('../model/modelPropsModel');
+// import { processTemplates } = require('../utils/processTemplates');
+const { processTemplates } = require('../utils/processTemplates');
+const { templates, templatesService } = require('../config')
 const modelController = {
   // 分页查询模块
   getModelsByPage: (req, res) => {
@@ -52,7 +55,7 @@ const modelController = {
   createModel: (req, res) => {
     // 从请求体中获取模块名和邮箱
     const { engName, remark, moduleId, } = req.query;
-    console.log('req.query: ', req.query);
+
     // 调用 Model 模型中的 create 方法创建新模块
     Model.create(engName, remark, moduleId, (err) => {
       if (err) {
@@ -66,7 +69,7 @@ const modelController = {
   },
   // 更新模块信息
   updateModel: (req, res) => {
-    console.log('req: ', req);
+
     try {
       // 获取要更新的模块的 ID
       const id = Number(req.params.id);
@@ -104,6 +107,44 @@ const modelController = {
       // 如果成功删除模块，发送成功消息
       res.json({ code: 'success', data: { deleteId: id }, message: '删除成功' });
     });
+  },
+
+  // 生成代码
+  generateCode: (req, res) => {
+    try {
+      // 获取要更新的模型属性的 ID
+      debugger
+      const { id, engName, moduleName } = req.query
+      console.log('moduleName: ', moduleName);
+
+
+      ModuleProps.getAllByModelId(Number(id), (err, props) => {
+
+        if (err) {
+          // 如果出现错误，返回 500 状态码并发送错误消息
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        // 如果成功获取模型属性，以 JSON 格式返回模型属性数据
+        const val = {
+          "moduleName": moduleName,// java模块名
+          "modelName": engName,// java模型名
+          "tableName": `${engName}Table`,// 前端组件名
+          "columns": [] // 
+        }
+        val.columns = JSON.stringify(props)
+
+        processTemplates({
+          dataSource: val,
+          templates,
+          templatesService,
+        })
+        res.json({ code: 'success', data: {}, message: '成功' });
+      })
+    } catch (error) {
+      // 捕获其他未处理的错误并返回 500 状态码
+      res.status(500).json({ error: error.message });
+    }
   }
 };
 

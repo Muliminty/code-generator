@@ -1,7 +1,4 @@
-const { data } = require('./model/user');
 
-
-// 配置文件
 module.exports = {
   templates: [
     // 前端模板 

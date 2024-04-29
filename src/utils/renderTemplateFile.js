@@ -9,7 +9,7 @@ const readTemplateFile = ({ targetPath, name, Unicode = 'utf-8' }) => {
     const templateContent = fs.readFileSync(templatePath, Unicode);
     return templateContent
   } catch (error) {
-    console.log('error: ', error);
+    console.log('readTemplateFile error: ', error);
     return '文件读取失败'
   }
 }

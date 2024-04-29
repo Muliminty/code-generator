@@ -55,7 +55,7 @@ const {{ modelName | pascal }} = ({ dataSource, onCreate, onDelete, onUpdate }) 
     {{each columns}}
     {
       "title": {{$value.title}},
-      "dataIndex": {{$value.dataIndex}}
+      "dataIndex": {{$value.engName}}
     },
     {{/each}}
     {

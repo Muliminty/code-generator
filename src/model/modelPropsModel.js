@@ -41,7 +41,19 @@ const ModuleProps = {
       callback(null, rows);
     });
   },
-
+  /**
+   * 获取所有模块
+   * @param {function} callback - 回调函数
+   */
+  getAllByModelId: (modelId, callback) => {
+    db.all('SELECT * FROM code_model_props WHERE ModelId = ?', [modelId], (err, rows) => {
+      if (err) {
+        callback(err);
+        return;
+      }
+      callback(null, rows);
+    });
+  },
   /**
    * 创建模块
    * @param {string} name - 代码
@@ -71,9 +83,17 @@ const ModuleProps = {
    * @param {number} moduleId - 模块ID
    * @param {function} callback - 回调函数
    */
-  update: (id, name, remark, moduleId, callback) => {
-    const sql = 'UPDATE code_model_props SET name = ?, remark = ?, moduleId = ? WHERE id = ?';
-    db.run(sql, [name, remark, moduleId, id], (err) => {
+  update: (id, fields, callback) => {
+    // `fields` 是一个对象，其中键是字段名，值是要更新的值
+    const keys = Object.keys(fields);
+    const placeholders = keys.map(key => `${key} = ?`).join(', ');
+
+    const sql = `UPDATE code_model_props SET ${placeholders} WHERE id = ?`;
+
+    // 获取字段的值，然后将 `id` 作为最后一个值
+    const values = keys.map(key => fields[key]).concat(id);
+
+    db.run(sql, values, (err) => {
       if (err) {
         callback(err);
         return;
