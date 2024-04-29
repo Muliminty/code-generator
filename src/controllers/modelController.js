@@ -2,6 +2,7 @@ const Model = require('../model/modelModel');
 const ModuleProps = require('../model/modelPropsModel');
 // import { processTemplates } = require('../utils/processTemplates');
 const { processTemplates } = require('../utils/processTemplates');
+const { compressFolder, getLocalIpAddress } = require('../utils/compressFolder');
 const { templates, templatesService } = require('../config')
 const modelController = {
   // 分页查询模块
@@ -118,7 +119,7 @@ const modelController = {
       console.log('moduleName: ', moduleName);
 
 
-      ModuleProps.getAllByModelId(Number(id), (err, props) => {
+      ModuleProps.getAllByModelId(Number(id), async (err, props) => {
 
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
@@ -134,12 +135,34 @@ const modelController = {
         }
         val.columns = JSON.stringify(props)
 
-        processTemplates({
+        const focusPath = await processTemplates({
           dataSource: val,
           templates,
           templatesService,
         })
-        res.json({ code: 'success', data: {}, message: '成功' });
+
+
+        const folderPath = `${focusPath}/output/template`; // 要压缩的文件夹路径
+        const outputFilePath = `${focusPath}/output/template.zip`; // 压缩文件的输出路径
+
+        try {
+          await compressFolder({ folderPath, outputFilePath })
+          const IP = getLocalIpAddress()
+          // res.download(outputFilePath, 'template.zip', (err) => {
+          //   if (err) {
+          //     // 如果发送文件时出现错误，返回错误消息
+          //     console.log('Download error:', err);
+          //     res.status(500).json({ error: 'Download failed' });
+          //   } else {
+          //     // 如果成功发送文件，返回成功消息
+          //     console.log('Download successful');
+          //   }
+          // });
+          res.json({ code: 'success', data: { IP, publicPath: 'public', name: 'template.zip' }, message: 'success' });
+        } catch (error) {
+          console.log('error: ', error);
+          res.status(500).json({ code: 'error', data: {}, message: error });
+        }
       })
     } catch (error) {
       // 捕获其他未处理的错误并返回 500 状态码

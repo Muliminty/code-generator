@@ -9,6 +9,7 @@
     "log": "node inspect index.js"
   },
   "dependencies": {
+    "archiver": "^7.0.1",
     "art-template": "^4.13.2",
     "body-parser": "^1.20.2",
     "express": "^4.19.2",
