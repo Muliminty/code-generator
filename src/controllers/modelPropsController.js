@@ -54,9 +54,9 @@ const modelPropsController = {
   // 创建模型属性
   createModelProps: (req, res) => {
     // 从请求体中获取模型属性名和邮箱
-    const { modelId, engName, remark, dataType, } = req.query;
+    const { modelId, engName, title, dataType, dataLength, showInSearch, showInForm, required } = req.query;
     // 调用 ModelProps 模型中的 create 方法创建新模型属性
-    ModelProps.create(modelId, engName, remark, dataType, (err) => {
+    ModelProps.create(modelId, engName, title, dataType, dataLength, showInSearch, showInForm, required, (err) => {
       if (err) {
         // 如果出现错误，返回 500 状态码并发送错误消息
         res.status(500).json({ error: err.message });

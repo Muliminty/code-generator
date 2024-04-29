@@ -49,12 +49,12 @@ const Model = {
    * @param {number} moduleId - 模块ID
    * @param {function} callback - 回调函数
    */
-  create: (name, remark, moduleId, callback) => {
+  create: (engName, remark, moduleId, callback) => {
     const sql = `
-      INSERT INTO code_model (name, remark, created_at, moduleId)
+      INSERT INTO code_model (engName, remark, created_at, moduleId)
       VALUES (?, ?, CURRENT_TIMESTAMP, ?)
     `;
-    db.run(sql, [name, remark, moduleId], (err) => {
+    db.run(sql, [engName, remark, moduleId], (err) => {
       if (err) {
         callback(err);
         return;

@@ -29,9 +29,9 @@ function createTable(tableName, columns) {
     const columnDefs = columns.map(column => {
       let columnDef = `${column.name} ${column.type}`;
       // 检查是否需要自增
-      if (column.autoIncrement === 'AUTOINCREMENT') {
-        columnDef += ' AUTOINCREMENT';
-      }
+      // if (column.autoIncrement === 'AUTOINCREMENT') {
+      //   columnDef += ' AUTOINCREMENT';
+      // }
       return columnDef;
     }).join(', ');
 

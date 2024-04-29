@@ -49,12 +49,12 @@ const ModuleProps = {
    * @param {number} moduleId - 模块ID
    * @param {function} callback - 回调函数
    */
-  create: (modelId, engName, remark, dataType, callback) => {
+  create: (modelId, engName, title, dataType, dataLength, showInSearch, showInForm, required, callback) => {
     const sql = `
-      INSERT INTO code_model_props (modelId, engName, remark, dataType, created_at)
-      VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
+      INSERT INTO code_model_props (modelId,  engName, title, dataType, dataLength, showInSearch, showInForm, required, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
     `;
-    db.run(sql, [modelId, engName, remark, dataType,], (err) => {
+    db.run(sql, [modelId, engName, title, dataType, dataLength, showInSearch, showInForm, required], (err) => {
       if (err) {
         callback(err);
         return;

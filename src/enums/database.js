@@ -29,7 +29,7 @@ const MODULE_TABLE = [
   { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' }, // 模块ID
   { name: 'code', type: 'TEXT' }, // 模块编码
   { name: 'name', type: 'TEXT' }, // 模块名称
-  { name: 'sortNum', type: 'INTEGER', autoIncrement: 'INTEGER' }, // 排序号（自增）
+  { name: 'sortNum', type: 'INTEGER', autoIncrement: 'AUTOINCREMENT' }, // 排序号（自增）
   { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }, // 创建时间
 ];
 
@@ -39,8 +39,8 @@ const MODULE_TABLE = [
  */
 const MODEL_TABLE = [
   { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' }, // 模型ID
-  { name: 'name', type: 'TEXT' }, // 模型名称
-  { name: 'remark', type: 'TEXT' }, // 备注
+  { name: 'engName', type: 'TEXT' }, //英文名称
+  { name: 'remark', type: 'TEXT' }, // 中文备注
   { name: 'moduleId', type: 'INTEGER' }, // 模块ID
   { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }, // 创建时间
 ];
@@ -52,7 +52,7 @@ const MODEL_TABLE = [
 const MODEL_PROPS_TABLE = [
   { name: 'id', type: 'INTEGER PRIMARY KEY AUTOINCREMENT' }, // 模型属性ID
   { name: 'modelId', type: 'INTEGER' }, // 模型ID
-  { name: 'key', type: 'TEXT' }, // 属性键
+  { name: 'engName', type: 'TEXT' }, // 属性键
   { name: 'title', type: 'TEXT' }, // 属性名称
   { name: 'dataType', type: 'TEXT' }, // 数据类型
   { name: 'dataLength', type: 'INTEGER' },// 属性类型长度

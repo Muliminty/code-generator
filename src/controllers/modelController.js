@@ -7,7 +7,6 @@ const modelController = {
       // 从查询参数中获取页码和每页条目数量
       const page = Number(req.query.page) || 0;
       const pageSize = Number(req.query.pageSize) || 10;
-
       // 调用 Model 模型中的 getByPage 方法进行分页查询
       Model.getByPage(page, pageSize, (err, props) => {
         if (err) {
@@ -52,9 +51,9 @@ const modelController = {
   // 创建模块
   createModel: (req, res) => {
     // 从请求体中获取模块名和邮箱
-    const { name, remark, moduleId, } = req.query;
+    const { engName, remark, moduleId, } = req.query;
     // 调用 Model 模型中的 create 方法创建新模块
-    Model.create(name, remark, moduleId, (err) => {
+    Model.create(engName, remark, moduleId, (err) => {
       if (err) {
         // 如果出现错误，返回 500 状态码并发送错误消息
         res.status(500).json({ error: err.message });
