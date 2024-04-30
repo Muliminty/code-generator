@@ -9,6 +9,8 @@ const PORT = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 const paginationMiddleware = require('./src/middleware/paginationMiddleware');
 
+app.use(express.static(__dirname + '/output'));
+
 // 允许所有来源访问
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

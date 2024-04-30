@@ -2,6 +2,8 @@ const Model = require('../model/modelModel');
 const ModuleProps = require('../model/modelPropsModel');
 // import { processTemplates } = require('../utils/processTemplates');
 const { processTemplates } = require('../utils/processTemplates');
+const { compressFolder, getLocalIpAddress } = require('../utils/compressFolder');
+
 const { templates, templatesService } = require('../config')
 const modelController = {
   // 分页查询模块
@@ -110,42 +112,55 @@ const modelController = {
   },
 
   // 生成代码
-  generateCode: (req, res) => {
+  generateCode: async (req, res) => {
     try {
       // 获取要更新的模型属性的 ID
-      debugger
-      const { id, engName, moduleName } = req.query
+      const { id, engName, moduleName } = req.query;
       console.log('moduleName: ', moduleName);
 
+      const props = await new Promise((resolve, reject) => {
+        ModuleProps.getAllByModelId(Number(id), (err, props) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(props);
+        });
+      });
 
-      ModuleProps.getAllByModelId(Number(id), (err, props) => {
+      const val = {
+        "moduleName": moduleName, // java模块名
+        "modelName": engName, // java模型名
+        "tableName": `${engName}Table`, // 前端组件名
+        "columns": JSON.stringify(props) // 将模型属性转换为 JSON 字符串
+      };
 
-        if (err) {
-          // 如果出现错误，返回 500 状态码并发送错误消息
-          res.status(500).json({ error: err.message });
-          return;
-        }
-        // 如果成功获取模型属性，以 JSON 格式返回模型属性数据
-        const val = {
-          "moduleName": moduleName,// java模块名
-          "modelName": engName,// java模型名
-          "tableName": `${engName}Table`,// 前端组件名
-          "columns": [] // 
-        }
-        val.columns = JSON.stringify(props)
+      // 调用异步函数 processTemplates，并等待其执行完成
+      const focusPath = await processTemplates({
+        dataSource: val,
+        templates,
+        templatesService,
+      });
 
-        processTemplates({
-          dataSource: val,
-          templates,
-          templatesService,
-        })
-        res.json({ code: 'success', data: {}, message: '成功' });
-      })
+      const folderPath = `${focusPath}/output/template`; // 要压缩的文件夹路径
+      const outputFileName = 'generated_code.zip'; // 指定文件名
+
+      try {
+        const outputFilePath = `${focusPath}/output/${outputFileName}`;
+        await compressFolder({ folderPath, outputFilePath });
+        const IP = getLocalIpAddress();
+        res.json({ code: 'success', data: { IP, fileName: outputFileName }, message: 'Code generated successfully' });
+      } catch (error) {
+        console.log('error: ', error);
+        res.status(500).json({ code: 'error', data: {}, message: error });
+      }
     } catch (error) {
       // 捕获其他未处理的错误并返回 500 状态码
+      console.error('generateCode error: ', error);
       res.status(500).json({ error: error.message });
     }
   }
+
 };
 
 module.exports = modelController;
