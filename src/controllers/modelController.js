@@ -3,7 +3,8 @@ const ModuleProps = require('../model/modelPropsModel');
 // import { processTemplates } = require('../utils/processTemplates');
 const { processTemplates } = require('../utils/processTemplates');
 const { compressFolder, getLocalIpAddress } = require('../utils/compressFolder');
-
+const path = require('path');
+const fs = require('fs');
 const { templates, templatesService } = require('../config')
 const modelController = {
   // 分页查询模块
@@ -135,31 +136,43 @@ const modelController = {
         "columns": JSON.stringify(props) // 将模型属性转换为 JSON 字符串
       };
 
-      // 调用异步函数 processTemplates，并等待其执行完成
-      const focusPath = await processTemplates({
-        dataSource: val,
-        templates,
-        templatesService,
+      const delPath = path.resolve(__dirname, '..', '..', 'output');
+
+      // 删除 output 文件夹
+      fs.rm(delPath, { recursive: true, force: true }, async (err) => {
+        if (err) {
+          console.error('Error deleting folder:', err);
+          res.status(500).json({ code: 'error', data: {}, message: 'Error deleting folder' });
+          return;
+        }
+
+        // 调用异步函数 processTemplates，并等待其执行完成
+        const focusPath = await processTemplates({
+          dataSource: val,
+          templates,
+          templatesService,
+        });
+
+        const folderPath = `${focusPath}/output/template`; // 要压缩的文件夹路径
+        const outputFileName = 'generated_code.zip'; // 指定文件名
+
+        try {
+          const outputFilePath = `${focusPath}/output/${outputFileName}`;
+          await compressFolder({ folderPath, outputFilePath });
+          const IP = getLocalIpAddress();
+          res.json({ code: 'success', data: { IP, fileName: outputFileName }, message: 'Code generated successfully' });
+        } catch (error) {
+          console.log('error: ', error);
+          res.status(500).json({ code: 'error', data: {}, message: error });
+        }
       });
-
-      const folderPath = `${focusPath}/output/template`; // 要压缩的文件夹路径
-      const outputFileName = 'generated_code.zip'; // 指定文件名
-
-      try {
-        const outputFilePath = `${focusPath}/output/${outputFileName}`;
-        await compressFolder({ folderPath, outputFilePath });
-        const IP = getLocalIpAddress();
-        res.json({ code: 'success', data: { IP, fileName: outputFileName }, message: 'Code generated successfully' });
-      } catch (error) {
-        console.log('error: ', error);
-        res.status(500).json({ code: 'error', data: {}, message: error });
-      }
     } catch (error) {
       // 捕获其他未处理的错误并返回 500 状态码
       console.error('generateCode error: ', error);
       res.status(500).json({ error: error.message });
     }
   }
+
 
 };
 
