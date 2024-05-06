@@ -1,0 +1,15 @@
+import {{modelName | pascal}}Table from "@/pages/{{modelName}}";
+import customIcon from "@/assets/svg/ic_side_custom.svg";
+
+export const {{modelName | toLowerCase}}Routes = [
+  {
+    name: "{{modelName | toLowerCase}}",
+    path: "/{{modelName | toLowerCase}}",
+    meta: {
+      i18nKey: "router.{{modelName | toLowerCase}}",
+      roleCode: "{{modelName | toLowerCase}}",
+      icon: <img src={customIcon} alt="" />,
+    },
+    element: <{{modelName | pascal}}Table />,
+  },
+];

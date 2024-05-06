@@ -4,6 +4,8 @@ const template = require('art-template');
 
 // 读取目标数据
 const readTemplateFile = ({ targetPath, name, Unicode = 'utf-8' }) => {
+  console.log('name: ', name);
+  console.log('targetPath: ', targetPath);
   try {
     const templatePath = path.join(targetPath, name);
     const templateContent = fs.readFileSync(templatePath, Unicode);
@@ -20,16 +22,10 @@ const generatedTemplateFile = ({ templateContent, data }) => {
     const generatedCode = template.render(templateContent, data);
     return generatedCode
   } catch (error) {
-    console.log('error: ', error);
-
+    console.log('generatedTemplateFile error: ', error);
   }
 }
 
-// 生成目录结构
-const generateProjectStructure = () => { }
-
-
-
 module.exports = {
-  readTemplateFile, generatedTemplateFile, generateProjectStructure
+  readTemplateFile, generatedTemplateFile
 };

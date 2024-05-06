@@ -37,6 +37,17 @@ const processTemplates = async ({
   try {
     for (const i of templates) {
       try {
+        const fileName = `${toLowerCase(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+        // let templatePath = `${focusPath}${i.targetPath.replace(/\/web/, `/web${dataSource.modelName.toLowerCase()}`)}`
+        let templatePath = `${focusPath}${i.targetPath.replace(/\/web/, `/web${dataSource.modelName.toLowerCase()}`)}`
+        if (i.fileName === 'Table') {
+          // templatePath = `${focusPath}${i.targetPath.replace(/\/modelName/, `/${dataSource.modelName.toLowerCase()}`)}`;
+          templatePath = `${templatePath.replace(/\/modelName/, `/${dataSource.modelName.toLowerCase()}`)}`;
+        }
+
+        // 创建文件夹路径
+        const outputDir = path.join(templatePath);
+
         const templateContent = readTemplateFile({
           targetPath: `${focusPath}${i.outPath}`,
           name: i.templateName
@@ -49,13 +60,14 @@ const processTemplates = async ({
         });
 
         // 创建文件夹
-        const outputDir = path.join(focusPath, `${i.targetPath}`);
+        // const outputDir = path.join(focusPath, `${ i.targetPath }`);
         await fs.mkdir(outputDir, { recursive: true });
 
+        // 输出路径
+        const outputPath = path.join(outputDir, fileName);
+
         // 将生成的代码写入文件
-        const outputPath = path.join(
-          `${focusPath}${i.targetPath}`,
-          `${[i.fileName]}${i.outSuffix}`); // 生成文件名
+        // const outputPath = path.join(`${ focusPath }${ i.targetPath }`, fileName);
 
         await fs.writeFile(outputPath, generatedCode, 'utf-8');
 
@@ -70,7 +82,7 @@ const processTemplates = async ({
       try {
         const fileName = `${pascal(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
 
-        const templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/${dataSource.moduleName}/${dataSource.modelName.toLowerCase()}`)}`;
+        const templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/${dataSource.moduleName}/${dataSource.modelName.toLowerCase()}`)} `;
 
         // 创建文件夹路径
         const outputDir = path.join(templatePath);
@@ -83,6 +95,7 @@ const processTemplates = async ({
           targetPath: `${focusPath}${i.outPath}`,
           name: i.templateName
         });
+        console.log('templateContent: ', templateContent);
 
         // 使用 art-template 渲染模板
         const generatedCode = generatedTemplateFile({
@@ -99,7 +112,7 @@ const processTemplates = async ({
         await fs.writeFile(outputPath, generatedCode, 'utf-8');
 
       } catch (error) {
-        console.log('error: ', error);
+        console.log('后端模板生成失败 error: ', error);
       }
     }
 

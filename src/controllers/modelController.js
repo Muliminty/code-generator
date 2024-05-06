@@ -130,8 +130,8 @@ const modelController = {
       });
 
       const val = {
-        "moduleName": moduleName, // java模块名
-        "modelName": engName, // java模型名
+        "moduleName": moduleName, // 模块名
+        "modelName": engName, // 模型名
         "tableName": `${engName}Table`, // 前端组件名
         "columns": JSON.stringify(props) // 将模型属性转换为 JSON 字符串
       };
@@ -166,6 +166,7 @@ const modelController = {
           res.status(500).json({ code: 'error', data: {}, message: error });
         }
       });
+
     } catch (error) {
       // 捕获其他未处理的错误并返回 500 状态码
       console.error('generateCode error: ', error);

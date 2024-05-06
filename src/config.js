@@ -4,19 +4,31 @@ module.exports = {
     // 前端模板 
     {
       "templateName": "ProTableTemp.txt",// 读取的模板文件名
-      "fileName": "ProTableTemp",// 生成文件名
+      "fileName": "Table",// 生成文件名
       "outSuffix": ".js",// 生成文件后缀
       "outPath": "/src/template/web",// 模板路径
-      'targetPath': '/output/template/web',// 生成路径
-
+      'targetPath': '/output/template/web/src/page/modelName',// 生成路径
     },
     {
       "templateName": "style.txt",// 读取的模板文件名
-      "fileName": "style",// 生成文件名
+      "fileName": "",// 生成文件名
       "outSuffix": ".scss",// 生成文件后缀
       "outPath": "/src/template/web",// 模板路径
-      'targetPath': '/output/template/web',// 生成路径
-
+      'targetPath': '/output/template/web/src/assets/scss',// 生成路径
+    },
+    {
+      "templateName": "api.txt",// 读取的模板文件名
+      "fileName": "",// 生成文件名
+      "outSuffix": ".js",// 生成文件后缀
+      "outPath": "/src/template/web",// 模板路径
+      'targetPath': '/output/template/web/src/api',// 生成路径
+    },
+    {
+      "templateName": "router.txt",// 读取的模板文件名
+      "fileName": "",// 生成文件名
+      "outSuffix": ".js",// 生成文件后缀
+      "outPath": "/src/template/web",// 模板路径
+      'targetPath': '/output/template/web/src/router',// 生成路径
     }
   ],
   templatesService: [
@@ -82,7 +94,6 @@ module.exports = {
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
       'targetPath': `/output/template/service/vo`,// 生成路径
-
     },
     {
       "templateName": "PageVo.java",// 读取的模板文件名
@@ -90,7 +101,6 @@ module.exports = {
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
       'targetPath': `/output/template/service/vo`,// 生成路径
-
     },
     {
       "templateName": "UpdateVo.java",// 读取的模板文件名
@@ -98,7 +108,6 @@ module.exports = {
       "outSuffix": ".java",// 生成文件后缀
       "outPath": "/src/template/service/vo",// 模板路径
       'targetPath': `/output/template/service/vo`,// 生成路径
-
     },
   ]
 };

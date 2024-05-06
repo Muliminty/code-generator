@@ -1,0 +1,34 @@
+import { request, payload } from "zlink-front";
+import { apiVersion } from "@/enums/common";
+const api = apiVersion();
+
+// 查询
+export const getCompanySolutionList = (params) =>
+  request({
+    url: `${api}/partner/dc/companySolution/list`,
+    method: "post",
+    ...payload({ ...params, pageNumber: params.page, pageSize: params.size }),
+  });
+
+// 新增
+export const addCompanySolution = (params) =>
+  request({
+    url: `${api}/partner/dc/companySolution`,
+    method: "post",
+    ...payload(params),
+  });
+
+// 更新
+export const updateCompanySolution = (params) =>
+  request({
+    url: `${api}/partner/dc/companySolution/${params.id}`,
+    method: "put",
+    ...payload(params),
+  });
+
+// 删除
+export const deleteCompanySolution = (id) =>
+  request({
+    url: `${api}/partner/dc/companySolution/${id}`,
+    method: "delete",
+  });
