@@ -30,7 +30,7 @@ function {{ modelName | pascal }}Table() {
       {{if $value.dataType=='Boolean'}}render: (_, record) => `${record.{{$value.engName}}}` {{/if}}
     },
     {{/each}}
-        {
+    {
       title: '操作',
       key: 'option',
       width: 200,
@@ -228,7 +228,12 @@ const AddModal = ({ title, open = false, columns = [], ok, cancel, value }) => {
           {columns.map((column) => {
             if (column.editable === true) {
               if (column.formType && ['Short', 'Long', 'Integer'].includes(column.formType)) {
-                return <ProFormDigit key={column.key} label={column.title} name={column.dataIndex} />;
+                return <ProFormDigit 
+                  key={column.key}
+                  label={column.title}
+                  name={column.dataIndex} 
+                  rules={[{ required: column.require, message: ` ${column.title} 必填` }]}
+                  />;
               }
 
               if (column.formType && ['Date'].includes(column.formType)) {
@@ -246,6 +251,7 @@ const AddModal = ({ title, open = false, columns = [], ok, cancel, value }) => {
                   key={column.key}
                   label={column.title}
                   name={column.dataIndex}
+                  rules={[{ required: column.require, message: ` ${column.title} 必填` }]}
                 />
               }
               return <ProFormText
