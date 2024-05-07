@@ -65,7 +65,7 @@ const modelPropsController = {
         return;
       }
       // 如果成功创建模型属性，发送成功消息
-      res.send('ModelProps created successfully');
+      res.json({ code: 'success', data: {}, message: '成功' });
     });
   },
   // 更新模型属性信息
@@ -76,17 +76,17 @@ const modelPropsController = {
       const id = Number(req.params.id);
 
       // 从请求体中获取新的模型属性名和邮箱
-      const { engName, title, dataType, dataLength, showInSearch, showInForm, required } = req.query;
+      const { engName, title, dataType, dataLength, showInSearch, showInForm, required, modelId } = req.query;
 
       // 调用 ModelProps 模型中的 update 方法更新模型属性信息
-      ModelProps.update(id, { engName, title, dataType, dataLength, showInSearch, showInForm, required }, (err) => {
+      ModelProps.update(id, { modelId, engName, title, dataType, dataLength, showInSearch, showInForm, required }, (err) => {
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
           res.status(500).json({ error: err.message });
           return;
         }
         // 如果成功更新模型属性信息，发送成功消息
-        res.send('ModelProps updated successfully');
+        res.json({ code: 'success', data: {}, message: '成功' });
       });
     } catch (error) {
       // 捕获其他未处理的错误并返回 500 状态码
@@ -106,7 +106,7 @@ const modelPropsController = {
         return;
       }
       // 如果成功删除模型属性，发送成功消息
-      res.send('ModelProps deleted successfully');
+      res.json({ code: 'success', data: {}, message: '成功' });
     });
   },
 

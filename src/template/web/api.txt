@@ -3,32 +3,32 @@ import { apiVersion } from "@/enums/common";
 const api = apiVersion();
 
 // 查询
-export const getCompanySolutionList = (params) =>
+export const get{{ modelName | pascal }}List = (params) =>
   request({
-    url: `${api}/partner/dc/companySolution/list`,
+    url: `${api}/{{ modelName | toLowerCase }}/page`,
     method: "post",
     ...payload({ ...params, pageNumber: params.page, pageSize: params.size }),
   });
 
 // 新增
-export const addCompanySolution = (params) =>
+export const add{{ modelName | pascal }} = (params) =>
   request({
-    url: `${api}/partner/dc/companySolution`,
+    url: `${api}/{{ modelName | toLowerCase }}/create`,
     method: "post",
     ...payload(params),
   });
 
 // 更新
-export const updateCompanySolution = (params) =>
+export const update{{ modelName | pascal }} = (params) =>
   request({
-    url: `${api}/partner/dc/companySolution/${params.id}`,
+    url: `${api}/{{ modelName | toLowerCase }}/update/${params.id}`,
     method: "put",
     ...payload(params),
   });
 
 // 删除
-export const deleteCompanySolution = (id) =>
+export const delete{{ modelName | pascal }} = (params) =>
   request({
-    url: `${api}/partner/dc/companySolution/${id}`,
+   url: `${api}/{{ modelName | toLowerCase }}/delete/${params.id}`,
     method: "delete",
   });

@@ -4,8 +4,6 @@ const template = require('art-template');
 
 // 读取目标数据
 const readTemplateFile = ({ targetPath, name, Unicode = 'utf-8' }) => {
-  console.log('name: ', name);
-  console.log('targetPath: ', targetPath);
   try {
     const templatePath = path.join(targetPath, name);
     const templateContent = fs.readFileSync(templatePath, Unicode);

@@ -1,118 +1,67 @@
 import React, { useRef, useEffect, useState } from 'react'
-import './style.scss'
+import "@/assets/scss/{{ modelName | toLowerCase }}.scss";
 import ProTable from '@ant-design/pro-table';
-import { Input, Button } from 'antd'
-const arr = new Array(20).fill(1).map((v, i) => {
-  return {
-    key: i,
-    value: v
-  };
-});
-const mock = arr
-  // {{tableName | style}}
-  // {{tableName | camel}}
-  // {{tableName | pascal}}
-  // {{tableName | hyphen}}
-  // {{tableName | constant}}
-  // {{tableName | snake}}
-  // {{tableName | underscore}}
+import ProForm, { ProFormText, ProFormDigit, ProFormDatePicker, ProFormSwitch } from "@ant-design/pro-form";
+import { Modal, Form, Button, message } from 'antd'
+import { 
+  get{{ modelName | pascal }}List,
+  add{{ modelName | pascal }},
+  update{{ modelName | pascal }},
+  delete{{ modelName | pascal }}
+  } from "@/api/{{ modelName | toLowerCase }}";
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import moment from 'moment';
+const { confirm } = Modal;
 
+function {{ modelName | pascal }}Table() {
 
-function {{ modelName | pascal }}() {
- 
   const actionRef = useRef();
   const columns = [
     {{each columns}}
     {
       "title": '{{$value.title}}',
-      "dataIndex": '{{$value.engName}}'
+      "dataIndex": '{{$value.engName}}',
+      "key": '{{$value.engName}}',
+      "editable": true,
+      "require": true,
+      "valueType": '{{$value.dataType}}',
+      "formType": '{{$value.dataType}}',
+      {{if $value.dataType=='Date'}}render: (_, record) => moment(record.{{$value.engName}}).format('YYYY-MM-DD HH:mm:ss'){{/if}}
+      {{if $value.dataType=='Boolean'}}render: (_, record) => `${record.{{$value.engName}}}` {{/if}}
     },
     {{/each}}
-    // {
-    //   title: '名称',
-    //   dataIndex: 'name',
-    //   key: 'name',
-    //   valueType: 'text',
-    // },
-    // {
-    //   title: '描述',
-    //   dataIndex: 'description',
-    //   key: 'description',
-    //   valueType: 'textarea',
-    // },
-    // {
-    //   title: '年龄',
-    //   dataIndex: 'age',
-    //   key: 'age',
-    //   valueType: 'digit',
-    // },
-    // {
-    //   title: '价格',
-    //   dataIndex: 'price',
-    //   key: 'price',
-    //   valueType: 'money',
-    // },
-    // {
-    //   title: '创建日期',
-    //   dataIndex: 'createdAt',
-    //   key: 'createdAt',
-    //   valueType: 'date',
-    // },
-    // {
-    //   title: '更新时间',
-    //   dataIndex: 'updatedAt',
-    //   key: 'updatedAt',
-    //   valueType: 'dateTime',
-    // },
-    // {
-    //   title: '状态',
-    //   dataIndex: 'status',
-    //   key: 'status',
-    //   valueType: 'select',
-    //   valueEnum: {
-    //     0: { text: '未开始', status: 'Default' },
-    //     1: { text: '进行中', status: 'Processing' },
-    //     2: { text: '已完成', status: 'Success' },
-    //     3: { text: '已取消', status: 'Error' },
-    //   },
-    // },
-    // {
-    //   title: 'renderFormItem',
-    //   dataIndex: 'age2',
-    //   key: 'age2',
-    //   valueType: 'age2',
-    //   width: '300px',
-    //   renderFormItem: (_, { type, defaultRender, formItemProps, fieldProps, ...rest }, form) => {
-    //     if (type === 'form') {
-    //       return null;
-    //     }
-    //     const status = form.getFieldValue('state');
-    //     if (status !== 'open') {
-    //       return (
-    //         // value 和 onchange 会通过 form 自动注入。
-    //         <Input
-    //           // 组件的配置
-    //           {...fieldProps}
-    //           // 自定义配置
-    //           placeholder="renderFormItem渲染的结果"
-    //         />
-    //       );
-    //     }
-    //     return defaultRender(_);
-    //   },
-    // },
-    {
+        {
       title: '操作',
       key: 'option',
-      width: 120,
+      width: 200,
       fixed: "right",
       valueType: 'option',
+      // eslint-disable-next-line no-unused-vars
       render: (_, record) => [
-        <Button type='link'>编辑</Button>,
-        <Button type='link' danger>删除</Button>,
+        // eslint-disable-next-line react/jsx-key
+        <Button type='link' onClick={() => {
+          setValue({ ...record, modelId: `${record.modelId}` })
+          setOpen(true)
+        }} >编辑</Button>,
+
+        // eslint-disable-next-line react/jsx-key
+        <Button type='link' danger onClick={
+          () => {
+
+            showPromiseConfirm({
+              title: '确认删除？',
+              content: '删除后将无法恢复',
+              ok: async () => {
+                await delete{{ modelName | pascal }}({ id: record.id })
+                actionRef.current?.reload()
+              }
+            })
+          }
+        }>删除</Button>,
       ],
     },
   ]
+
 
   const [searchHeight, setSearchHeight] = useState(0);
   const [collapsed, setCollapsed] = useState(true);
@@ -134,12 +83,13 @@ function {{ modelName | pascal }}() {
   }, [collapsed]);
 
 
-  const scroll = { x: 800, y: `calc(100vh - (${searchHeight}px + 340px))` }
+  const scroll = { x: 500, y: `calc(100vh - (${searchHeight}px + 420px))` }
   const pagination = {
     size: "default",
     defaultPageSize: 10,
     showSizeChanger: true,
   }
+
   const search = {
     span: 6,
     collapsed: collapsed, // 状态可控
@@ -149,54 +99,184 @@ function {{ modelName | pascal }}() {
     },
     defaultCollapsed: true,
   }
-  return (
-    <div className='TableDemo'>
 
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  return (
+    <div className='{{ modelName | pascal }}'>
+      <AddModal
+        title={value ? '编辑' : '新建'}
+        open={open}
+        value={value}
+        columns={columns}
+        ok={async (values) => {
+          try {
+            value ? await update{{ modelName | pascal }}({ id: value.id, ...values }) : await  add{{ modelName | pascal }}(values)
+            await actionRef.current?.reload()
+            value ? message.success('更新成功') : message.success('创建成功')
+            setValue(null)
+            setOpen(false)
+          } catch (error) {
+            console.log('error: ', error);
+          }
+        }}
+        cancel={() => {
+          setOpen(false)
+        }}
+      />
       <ProTable
         className='zk-pro-table-custom'
         columns={columns}
         actionRef={actionRef}
         pagination={pagination}
         toolBarRender={() => [
-          <Button key="button" type="primary">
+          <Button key="button" type="primary" onClick={() => {
+            setValue(null)
+            setOpen(true)
+          }}>
             新建
-          </Button>,
-          <Button key="button" type="primary">
-            导出
           </Button>,
         ]}
         scroll={scroll}
         search={search}
-        request={async (params, sort, filter) => {
-
+        request={async (params) => {
           try {
-            // const msg = await myQuery({
-            //   page: params.current,
-            //   pageSize: params.pageSize,
-            // });
-            // return {
-            //   data: msg.result,
-            //   success: true, // 需要返回 true 表示成功
-            //   total: msg.total, // 如果使用分页，需要传入 total
+            const msg = await get{{ modelName | pascal }}List({
+              currentPage: params.current,
+              pageSize: params.pageSize,
+              ...params
+            });
+            console.log('msg: ', msg);
 
             return {
-              data: mock,
+              data: msg.{{modelName}}s,
               success: true, // 需要返回 true 表示成功
-              total: 100, // 如果使用分页，需要传入 total
+              total: msg.totalCount, // 如果使用分页，需要传入 total
             };
-            // };
           } catch (error) {
             return {
-              data: mock,
+              data: [],
               success: true, // 需要返回 true 表示成功
               total: 0, // 如果使用分页，需要传入 total
             };
           }
         }}
       />
-
     </div>
-  )
+    )
 }
 
-export default {{ modelName | pascal }}
+
+const AddModal = ({ title, open = false, columns = [], ok, cancel, value }) => {
+
+  const formRef = useRef();
+  const [form] = Form.useForm()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    if (value === null) {
+      form.resetFields();
+    } else {
+      form.setFieldsValue(value);
+    }
+  }, [value, open, formRef.current]);
+
+  useEffect(() => {
+    setIsModalOpen(open);
+  }, [open]);
+
+  const handleOk = async () => {
+    try {
+      const values = await formRef.current.validateFields();
+      ok && ok(values, form.resetFields);
+    } catch (errorInfo) {
+      console.log('errorInfo: ', errorInfo);
+    }
+  };
+
+
+  const handleCancel = () => {
+    cancel && cancel()
+    formRef.current.resetFields();
+    setIsModalOpen(false);
+  };
+
+  const submitter = {
+      render: () => { return <></>;}
+  }
+
+  const labelCol = { span: 4 }
+  const wrapperCol = {
+    offset: 1,
+    span: 21,
+  }
+  return (
+    <>
+      <Modal
+        destroyOnClose={true}
+        className='add-modal'
+        title={title}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}>
+        <ProForm
+          submitter={submitter}
+          formRef={formRef}
+          form={form}
+          labelCol={labelCol}
+          wrapperCol={wrapperCol}
+          layout="horizontal">
+          {columns.map((column) => {
+            if (column.editable === true) {
+              if (column.formType && ['Short', 'Long', 'Integer'].includes(column.formType)) {
+                return <ProFormDigit key={column.key} label={column.title} name={column.dataIndex} />;
+              }
+
+              if (column.formType && ['Date'].includes(column.formType)) {
+                return <ProFormDatePicker
+                  key={column.key}
+                  label={column.title}
+                  name={column.dataIndex}
+                  rules={[{ required: column.require, message: ` ${column.title} 必填` }]}
+                  placeholder='请选择日期'
+                />
+              }
+
+              if (column.formType && ['Boolean'].includes(column.formType)) {
+                return <ProFormSwitch
+                  key={column.key}
+                  label={column.title}
+                  name={column.dataIndex}
+                />
+              }
+              return <ProFormText
+                key={column.key}
+                label={column.title}
+                name={column.dataIndex}
+                rules={[{ required: column.require, message: ` ${column.title} 必填` }]}
+              />
+            }
+          })}
+        </ProForm>
+      </Modal>
+    </>
+  );
+};
+
+const showPromiseConfirm = ({ title, content, ok, cancel }) => {
+
+  confirm({
+    title: title,
+    icon: <><ExclamationCircleFilled /></>,
+    content: content,
+    async onOk() {
+      try {
+        ok && await ok()
+      } catch {
+        return console.log('Oops errors!');
+      }
+    },
+    onCancel() { cancel && cancel() },
+  });
+};
+
+export default {{ modelName | pascal }}Table

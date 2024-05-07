@@ -15,15 +15,23 @@ const template = require('art-template');
 
 const toLowerCase = str => str.toLowerCase();
 
-template.defaults.imports.style = style
-template.defaults.imports.camel = camel
-template.defaults.imports.pascal = pascal
-template.defaults.imports.hyphen = hyphen
-template.defaults.imports.constant = constant
-template.defaults.imports.snake = snake
-template.defaults.imports.underscore = underscore
-template.defaults.imports.toLowerCase = toLowerCase
+template.defaults.imports.style = style // 驼峰
+template.defaults.imports.camel = camel // 驼峰
+template.defaults.imports.pascal = pascal // 首字母大写
+template.defaults.imports.hyphen = hyphen // 连字符
+template.defaults.imports.constant = constant // 全部大写
+template.defaults.imports.snake = snake   // 下划线
+template.defaults.imports.underscore = underscore // 下划线
+template.defaults.imports.toLowerCase = toLowerCase // 全部转小写
 
+
+// {{tableName | style}}        camel
+// {{tableName | camel}}        userTable
+// {{tableName | pascal}}       UserTable
+// {{tableName | hyphen}}       user-table
+// {{tableName | constant}}     USER_TABLE
+// {{tableName | snake}}        user_table
+// {{tableName | underscore}}   user_table
 template.defaults.debug = true;
 
 const processTemplates = async ({
@@ -39,7 +47,7 @@ const processTemplates = async ({
       try {
         const fileName = `${toLowerCase(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
         // let templatePath = `${focusPath}${i.targetPath.replace(/\/web/, `/web${dataSource.modelName.toLowerCase()}`)}`
-        let templatePath = `${focusPath}${i.targetPath.replace(/\/web/, `/web${dataSource.modelName.toLowerCase()}`)}`
+        let templatePath = `${focusPath}${i.targetPath.replace(/\/web/, `/Front/${dataSource.modelName.toLowerCase()}`)}`
         if (i.fileName === 'Table') {
           // templatePath = `${focusPath}${i.targetPath.replace(/\/modelName/, `/${dataSource.modelName.toLowerCase()}`)}`;
           templatePath = `${templatePath.replace(/\/modelName/, `/${dataSource.modelName.toLowerCase()}`)}`;
@@ -82,12 +90,12 @@ const processTemplates = async ({
       try {
         const fileName = `${pascal(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
 
-        const templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/${dataSource.moduleName}/${dataSource.modelName.toLowerCase()}`)} `;
+        const templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/Back/${dataSource.moduleName}/${dataSource.modelName.toLowerCase()}`)}`;
 
         // 创建文件夹路径
         const outputDir = path.join(templatePath);
 
-        // 在sso创建文件夹
+        // 创建文件夹
         await fs.mkdir(outputDir, { recursive: true });
 
         // 读取模板文件
@@ -95,8 +103,6 @@ const processTemplates = async ({
           targetPath: `${focusPath}${i.outPath}`,
           name: i.templateName
         });
-        console.log('templateContent: ', templateContent);
-
         // 使用 art-template 渲染模板
         const generatedCode = generatedTemplateFile({
           templateContent: templateContent,
@@ -110,7 +116,7 @@ const processTemplates = async ({
         const outputPath = path.join(outputDir, fileName);
 
         await fs.writeFile(outputPath, generatedCode, 'utf-8');
-
+        console.log('后端模板生成成功');
       } catch (error) {
         console.log('后端模板生成失败 error: ', error);
       }

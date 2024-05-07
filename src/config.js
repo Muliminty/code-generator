@@ -29,7 +29,7 @@ module.exports = {
       "outSuffix": ".js",// 生成文件后缀
       "outPath": "/src/template/web",// 模板路径
       'targetPath': '/output/template/web/src/router',// 生成路径
-    }
+    },
   ],
   templatesService: [
     {

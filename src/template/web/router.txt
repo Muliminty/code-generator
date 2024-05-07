@@ -1,4 +1,4 @@
-import {{modelName | pascal}}Table from "@/pages/{{modelName}}";
+import {{modelName | pascal}}Table from "@/pages/{{modelName | toLowerCase}}/{{modelName | toLowerCase}}Table.js";
 import customIcon from "@/assets/svg/ic_side_custom.svg";
 
 export const {{modelName | toLowerCase}}Routes = [
@@ -7,7 +7,7 @@ export const {{modelName | toLowerCase}}Routes = [
     path: "/{{modelName | toLowerCase}}",
     meta: {
       i18nKey: "router.{{modelName | toLowerCase}}",
-      roleCode: "{{modelName | toLowerCase}}",
+      // roleCode: "{{modelName | toLowerCase}}",
       icon: <img src={customIcon} alt="" />,
     },
     element: <{{modelName | pascal}}Table />,
