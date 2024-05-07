@@ -29,6 +29,6 @@ export const update{{ modelName | pascal }} = (params) =>
 // 删除
 export const delete{{ modelName | pascal }} = (params) =>
   request({
-   url: `${api}/{{ modelName | toLowerCase }}/delete/${params.id}`,
+    url: `${api}/{{ modelName | toLowerCase }}/delete/${params.id}`,
     method: "delete",
   });

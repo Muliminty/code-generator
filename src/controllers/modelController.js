@@ -13,8 +13,9 @@ const modelController = {
       // 从查询参数中获取页码和每页条目数量
       const page = Number(req.query.page) || 0;
       const pageSize = Number(req.query.pageSize) || 10;
+      const { moduleId } = req.query;
       // 调用 Model 模型中的 getByPage 方法进行分页查询
-      Model.getByPage(page, pageSize, (err, props) => {
+      Model.getByPage(page, pageSize, { moduleId }, (err, props) => {
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
           return res.status(500).json({ code: 'error', message: err.message });

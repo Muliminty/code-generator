@@ -7,7 +7,28 @@ const Model = {
    * @param {number} pageSize - 每页数量
    * @param {function} callback - 回调函数
    */
-  getByPage: (page, pageSize, callback) => {
+  // getByPage: (page, pageSize, callback) => {
+  //   // 查询总记录数
+  //   db.get('SELECT COUNT(*) AS total FROM code_model', (err, row) => {
+  //     if (err) {
+  //       callback(err, null);
+  //     } else {
+  //       const totalCount = row.total;
+  //       // 计算查询偏移量
+  //       const offset = (page - 1) * pageSize;
+  //       // 使用 db 模块的 all 方法执行 SQL 查询，根据分页参数获取模块数据
+  //       db.all('SELECT * FROM code_model LIMIT ? OFFSET ?', [pageSize, offset], (err, rows) => {
+  //         if (err) {
+  //           callback(err, null);
+  //         } else {
+  //           callback(null, { totalCount, list: rows });
+  //         }
+  //       });
+  //     }
+  //   });
+  // },
+
+  getByPage: (page, pageSize, params, callback) => {
     // 查询总记录数
     db.get('SELECT COUNT(*) AS total FROM code_model', (err, row) => {
       if (err) {
@@ -16,8 +37,19 @@ const Model = {
         const totalCount = row.total;
         // 计算查询偏移量
         const offset = (page - 1) * pageSize;
+        // 构建 SQL 查询语句
+        let sql = 'SELECT * FROM code_model';
+        const sqlParams = [];
+        // 如果存在查询条件，则添加 WHERE 子句
+        if (params && params.moduleId) {
+          sql += ' WHERE moduleId = ?';
+          sqlParams.push(params.moduleId);
+        }
+        sql += ` LIMIT ? OFFSET ?`;
+        sqlParams.push(pageSize, offset);
+
         // 使用 db 模块的 all 方法执行 SQL 查询，根据分页参数获取模块数据
-        db.all('SELECT * FROM code_model LIMIT ? OFFSET ?', [pageSize, offset], (err, rows) => {
+        db.all(sql, sqlParams, (err, rows) => {
           if (err) {
             callback(err, null);
           } else {
@@ -27,7 +59,6 @@ const Model = {
       }
     });
   },
-
   /**
    * 获取所有模块
    * @param {function} callback - 回调函数
