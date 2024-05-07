@@ -101,16 +101,31 @@ const modelController = {
   deleteModel: (req, res) => {
     // 获取要删除的模块的 ID
     const id = req.params.id;
-    // 调用 Model 模型中的 delete 方法删除模块
-    Model.delete(id, (err) => {
+    let totalCount = 0
+    ModuleProps.getByPage(1, 100, { modelId: id }, (err, props) => {
       if (err) {
         // 如果出现错误，返回 500 状态码并发送错误消息
-        res.status(500).json({ error: err.message });
-        return;
+        return res.status(500).json({ code: 'error', message: err.message });
       }
-      // 如果成功删除模块，发送成功消息
-      res.json({ code: 'success', data: { deleteId: id }, message: '删除成功' });
-    });
+      // 构建返回数据格式
+      totalCount = props.list.length; // 假设这里是获取总记录数的方法
+
+      if (totalCount > 0) {
+        return res.status(500).json({ code: 'error', message: '请先删除该模型下的所有模型属性' });
+      }
+
+      // 调用 Model 模型中的 delete 方法删除模块
+      Model.delete(id, (err) => {
+        if (err) {
+          // 如果出现错误，返回 500 状态码并发送错误消息
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        // 如果成功删除模块，发送成功消息
+        res.json({ code: 'success', data: { deleteId: id }, message: '删除成功' });
+      });
+    })
+
   },
 
   // 生成代码

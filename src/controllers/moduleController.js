@@ -1,5 +1,5 @@
 const Module = require('../model/moduleModel');
-
+const Model = require('../model/modelModel');
 const moduleController = {
   // 分页查询模块
   getModulesByPage: (req, res) => {
@@ -92,16 +92,31 @@ const moduleController = {
   deleteModule: (req, res) => {
     // 获取要删除的模块的 ID
     const id = req.params.id;
-    // 调用 Module 模型中的 delete 方法删除模块
-    Module.delete(id, (err) => {
+    let totalCount = 0
+    Model.getByPage(1, 100, { moduleId: id }, (err, props) => {
       if (err) {
         // 如果出现错误，返回 500 状态码并发送错误消息
-        res.status(500).json({ error: err.message });
-        return;
+        return res.status(500).json({ code: 'error', message: err.message });
       }
-      // 如果成功删除模块，发送成功消息
-      res.json({ code: 'success', data: {}, message: '成功' });
-    });
+      // 构建返回数据格式
+      totalCount = props.list.length; // 假设这里是获取总记录数的方法
+
+      if (totalCount > 0) {
+        return res.status(500).json({ code: 'error', message: '请先删除该模块下的所有模型' });
+      }
+      // 调用 Module 模型中的 delete 方法删除模块
+      Module.delete(id, (err) => {
+
+        if (err) {
+          // 如果出现错误，返回 500 状态码并发送错误消息
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        // 如果成功删除模块，发送成功消息
+        res.json({ code: 'success', data: {}, message: '成功' });
+      });
+    })
+
   }
 };
 
