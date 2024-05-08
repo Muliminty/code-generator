@@ -109,5 +109,12 @@ module.exports = {
       "outPath": "/src/template/service/vo",// 模板路径
       'targetPath': `/output/template/service/vo`,// 生成路径
     },
+    {
+      "templateName": "properties.txt",// 读取的模板文件名
+      "fileName": "",// 生成文件名
+      "outSuffix": ".properties",// 生成文件后缀
+      "outPath": "/src/template/service",// 模板路径
+      'targetPath': `/output/template/service`,// 生成路径
+    },
   ]
 };

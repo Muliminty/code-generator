@@ -88,8 +88,10 @@ const processTemplates = async ({
 
     for (const i of templatesService) {
       try {
-        const fileName = `${pascal(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
-
+        let fileName = `${pascal(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+        if (i.outSuffix === '.properties') {// 如果是properties文件
+          fileName = `${dataSource.modelName.toLowerCase()}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+        }
         const templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/Back/${dataSource.moduleName}/${dataSource.modelName.toLowerCase()}`)}`;
 
         // 创建文件夹路径

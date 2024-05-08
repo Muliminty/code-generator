@@ -58,10 +58,10 @@ const modelController = {
   // 创建模块
   createModel: (req, res) => {
     // 从请求体中获取模块名和邮箱
-    const { engName, remark, moduleId, } = req.query;
+    const { engName, remark, moduleId, properties } = req.query;
 
     // 调用 Model 模型中的 create 方法创建新模块
-    Model.create(engName, remark, moduleId, (err) => {
+    Model.create(engName, remark, moduleId, properties, (err) => {
       if (err) {
         // 如果出现错误，返回 500 状态码并发送错误消息
         res.status(500).json({ error: err.message });
@@ -79,10 +79,10 @@ const modelController = {
       const id = Number(req.params.id);
 
       // 从请求体中获取新的模块名和邮箱
-      const { engName, remark, moduleId } = req.query;
+      const { engName, remark, moduleId, properties } = req.query;
 
       // 调用 Model 模型中的 update 方法更新模块信息
-      Model.update(id, engName, remark, moduleId, (err) => {
+      Model.update(id, engName, remark, moduleId, properties, (err) => {
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
           res.status(500).json({ error: err.message });
@@ -128,11 +128,24 @@ const modelController = {
 
   },
 
+  //时间戳转换方法    date:时间戳数字
+  formatDate: (date) => {
+    var date = new Date(date);
+    var YY = date.getFullYear() + '-';
+    var MM = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var DD = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate());
+    var hh = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+    var mm = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+    var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+    return YY + MM + DD + " " + hh + mm + ss;
+  },
+
   // 生成代码
   generateCode: async (req, res) => {
     try {
       // 获取要更新的模型属性的 ID
-      const { id, engName, moduleName } = req.query;
+      const { id, engName, moduleName, module } = req.query;
+      console.log(' req.query: ', req.query);
       console.log('moduleName: ', moduleName);
 
       const props = await new Promise((resolve, reject) => {
@@ -146,6 +159,8 @@ const modelController = {
       });
 
       const val = {
+        ...req.query,
+        "generatorDate": modelController.formatDate(Date.parse(new Date())),
         "moduleName": moduleName, // 模块名
         "modelName": engName, // 模型名
         "tableName": `${engName}Table`, // 前端组件名

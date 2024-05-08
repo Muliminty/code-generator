@@ -60,10 +60,10 @@ const Model = {
    * @param {number} moduleId - 模块ID
    * @param {function} callback - 回调函数
    */
-  create: (engName, remark, moduleId, callback) => {
+  create: (engName, remark, moduleId, properties, callback) => {
     const sql = `
-      INSERT INTO code_model (engName, remark, created_at, moduleId)
-      VALUES (?, ?, CURRENT_TIMESTAMP, ?)
+      INSERT INTO code_model (engName, remark, created_at, moduleId,properties)
+      VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)
     `;
     db.run(sql, [engName, remark, moduleId], (err) => {
       if (err) {
@@ -82,9 +82,9 @@ const Model = {
    * @param {number} moduleId - 模块ID
    * @param {function} callback - 回调函数
    */
-  update: (id, engName, remark, moduleId, callback) => {
-    const sql = 'UPDATE code_model SET engName = ?, remark = ?, moduleId = ? WHERE id = ?';
-    db.run(sql, [engName, remark, moduleId, id], (err) => {
+  update: (id, engName, remark, moduleId, properties, callback) => {
+    const sql = 'UPDATE code_model SET engName = ?, properties = ?,remark = ?, moduleId = ? WHERE id = ?';
+    db.run(sql, [engName, properties, remark, moduleId, id], (err) => {
       if (err) {
         callback(err);
         return;

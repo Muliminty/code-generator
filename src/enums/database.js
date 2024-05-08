@@ -42,6 +42,7 @@ const MODEL_TABLE = [
   { name: 'engName', type: 'TEXT' }, //英文名称
   { name: 'remark', type: 'TEXT' }, // 中文备注
   { name: 'moduleId', type: 'INTEGER' }, // 模块ID
+  { name: 'properties', type: 'TEXT' }, // 错误码缩写
   { name: 'created_at', type: 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP' }, // 创建时间
 ];
 
