@@ -5,7 +5,7 @@ const api = apiVersion();
 // 查询
 export const get{{ modelName | pascal }}List = (params) =>
   request({
-    url: `${api}/{{ modelName | toLowerCase }}/page`,
+    url: `${api}/{{ moduleName | toLowerCase }}/{{modelName|camel}}/page`,
     method: "post",
     ...payload({ ...params, pageNumber: params.page, pageSize: params.size }),
   });
@@ -13,7 +13,7 @@ export const get{{ modelName | pascal }}List = (params) =>
 // 新增
 export const add{{ modelName | pascal }} = (params) =>
   request({
-    url: `${api}/{{ modelName | toLowerCase }}/create`,
+    url: `${api}/{{ moduleName | toLowerCase }}/{{modelName|camel}}/create`,
     method: "post",
     ...payload(params),
   });
@@ -21,7 +21,7 @@ export const add{{ modelName | pascal }} = (params) =>
 // 更新
 export const update{{ modelName | pascal }} = (params) =>
   request({
-    url: `${api}/{{ modelName | toLowerCase }}/update/${params.id}`,
+    url: `${api}/{{ moduleName | toLowerCase }}/{{modelName|camel}}/update/${params.id}`,
     method: "put",
     ...payload(params),
   });
@@ -29,6 +29,6 @@ export const update{{ modelName | pascal }} = (params) =>
 // 删除
 export const delete{{ modelName | pascal }} = (params) =>
   request({
-    url: `${api}/{{ modelName | toLowerCase }}/delete/${params.id}`,
+    url: `${api}/{{ moduleName | toLowerCase }}/{{modelName|camel}}/delete/${params.id}`,
     method: "delete",
   });

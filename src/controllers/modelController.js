@@ -6,6 +6,17 @@ const { compressFolder, getLocalIpAddress } = require('../utils/compressFolder')
 const path = require('path');
 const fs = require('fs');
 const { templates, templatesService } = require('../config')
+
+const {
+  style,
+  camel,
+  pascal,
+  hyphen,
+  constant,
+  snake,
+  underscore,
+} = require('naming-style');
+
 const modelController = {
   // 分页查询模块
   getModelsByPage: (req, res) => {
@@ -139,7 +150,6 @@ const modelController = {
     var ss = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
     return YY + MM + DD + " " + hh + mm + ss;
   },
-
   // 生成代码
   generateCode: async (req, res) => {
     try {
@@ -160,6 +170,7 @@ const modelController = {
 
       const val = {
         ...req.query,
+        'module_model_name': `${constant(moduleName)}_${constant(engName)}`,// 模块模型名称
         "generatorDate": modelController.formatDate(Date.parse(new Date())),
         "moduleName": moduleName, // 模块名
         "modelName": engName, // 模型名
@@ -207,5 +218,6 @@ const modelController = {
 
 
 };
+const toLowerCase = str => str.toLowerCase();
 
 module.exports = modelController;

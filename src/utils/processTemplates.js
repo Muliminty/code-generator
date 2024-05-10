@@ -14,7 +14,13 @@ const {
 const template = require('art-template');
 
 const toLowerCase = str => str.toLowerCase();
-
+const getErrCodeNum = (num) => {
+  let str = `${num}`;
+  while (str.length < 4) {
+    str = `0${str}`;
+  }
+  return str;
+};
 template.defaults.imports.style = style // 驼峰
 template.defaults.imports.camel = camel // 驼峰
 template.defaults.imports.pascal = pascal // 首字母大写
@@ -23,6 +29,7 @@ template.defaults.imports.constant = constant // 全部大写
 template.defaults.imports.snake = snake   // 下划线
 template.defaults.imports.underscore = underscore // 下划线
 template.defaults.imports.toLowerCase = toLowerCase // 全部转小写
+template.defaults.imports.getErrCodeNum = getErrCodeNum // 全部转小写
 
 
 // {{tableName | style}}        camel
@@ -40,6 +47,7 @@ const processTemplates = async ({
   templatesService,
   focusPath = path.resolve(__dirname, '..', '..')
 }) => {
+  console.log('dataSource: ', dataSource);
   dataSource.columns = JSON.parse(dataSource.columns);
 
   try {
@@ -87,12 +95,13 @@ const processTemplates = async ({
     }
 
     for (const i of templatesService) {
+      let fileName = `${pascal(dataSource.module_model_name)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+      console.log('fileName: ', fileName);
       try {
-        let fileName = `${pascal(dataSource.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
         if (i.outSuffix === '.properties') {// 如果是properties文件
-          fileName = `${dataSource.modelName.toLowerCase()}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+          fileName = `${dataSource.moduleName.toLowerCase()}${[i.fileName]}${i.outSuffix}`; // 生成文件名
         }
-        const templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/Back/${dataSource.moduleName}/${dataSource.modelName.toLowerCase()}`)}`;
+        const templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/Back/${dataSource.moduleName}`)}`;
 
         // 创建文件夹路径
         const outputDir = path.join(templatePath);
@@ -120,7 +129,7 @@ const processTemplates = async ({
         await fs.writeFile(outputPath, generatedCode, 'utf-8');
         console.log('后端模板生成成功');
       } catch (error) {
-        console.log('后端模板生成失败 error: ', error);
+        console.log('后端模板生成失败 error: ', fileName, error);
       }
     }
 
