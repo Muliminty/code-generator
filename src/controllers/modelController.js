@@ -154,7 +154,7 @@ const modelController = {
   generateCode: async (req, res) => {
     try {
       // 获取要更新的模型属性的 ID
-      const { id, engName, moduleName, module } = req.query;
+      const { id, engName, moduleName, module, isReadFile } = req.query;
       console.log(' req.query: ', req.query);
       console.log('moduleName: ', moduleName);
 
@@ -170,7 +170,7 @@ const modelController = {
 
       const val = {
         ...req.query,
-        'module_model_name': `${constant(moduleName)}_${constant(engName)}`,// 模块模型名称
+        'module_model_name': `${constant(moduleName)}_${constant(engName)}`, // 模块模型名称
         "generatorDate": modelController.formatDate(Date.parse(new Date())),
         "moduleName": moduleName, // 模块名
         "modelName": engName, // 模型名
@@ -199,10 +199,74 @@ const modelController = {
         const outputFileName = 'generated_code.zip'; // 指定文件名
 
         try {
+          let fileNames = []
+          let fontfileNames = []
+          const IP = getLocalIpAddress();
+          if (isReadFile === "1") {
+            for (const i of templatesService) {
+              let fileName = `${pascal(val.module_model_name)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+              console.log('fileName: ', fileName);
+              if (i.templateName === 'properties.txt') { // 如果是properties文件
+                fileName = `${val.moduleName.toLowerCase()}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+              }
+
+              if (i.templateName === 'permission.txt') { // 如果是properties文件
+                fileName = `${val.moduleName.toLowerCase()}_${[i.fileName]}${i.outSuffix}`; // 生成文件名
+              }
+              // let targetPath = i.targetPath.replace(/\/output/,"")
+              let templatePath = `${focusPath}${i.targetPath.replace(/\/service/, `/Back/${val.moduleName}`)}`;
+              // 创建文件夹路径
+              const outputDir = path.join(templatePath);
+              // 输出路径
+              let outputPath = path.join(outputDir, fileName);
+              // outputPath = "http://" + IP+":3000/"+ outputPath
+
+
+              fs.readFile(outputPath, 'utf8', (err, data) => {
+                if (err) {
+                  console.error(err);
+                  return;
+                }
+                // console.log(data);
+                let fileNameMap = { "templateName": i.templateName, template: data, outSuffix: i.outSuffix.split('.')[1] }
+                fileNames.push(fileNameMap)
+              });
+
+
+            }
+
+            for (const i of templates) {
+              const fileName = `${toLowerCase(val.modelName)}${[i.fileName]}${i.outSuffix}`; // 生成文件名
+              let templatePath = `${focusPath}${i.targetPath.replace(/\/web/, `/Front/${val.modelName.toLowerCase()}`)}`
+              if (i.fileName === 'Table') {
+                templatePath = `${templatePath.replace(/\/modelName/, `/${val.modelName.toLowerCase()}`)}`;
+              }
+
+              // 创建文件夹路径
+              const outputDir = path.join(templatePath);
+              // 输出路径
+              const outputPath = path.join(outputDir, fileName);
+              console.log(outputPath)
+              fs.readFile(outputPath, 'utf8', (err, data) => {
+                if (err) {
+                  console.error(err);
+                  return;
+                }
+                // console.log(data);
+                let fileNameMap = { "templateName": i.templateName, template: data, outSuffix: i.outSuffix.split('.')[1] }
+                fontfileNames.push(fileNameMap)
+              });
+            }
+          }
+
+
+
+
+
           const outputFilePath = `${focusPath}/output/${outputFileName}`;
           await compressFolder({ folderPath, outputFilePath });
-          const IP = getLocalIpAddress();
-          res.json({ code: 'success', data: { IP, fileName: outputFileName }, message: 'Code generated successfully' });
+
+          res.json({ code: 'success', data: { IP, fileName: outputFileName, "templateNames": fileNames, "fontTemplateNames": fontfileNames }, message: 'Code generated successfully' });
         } catch (error) {
           console.log('error: ', error);
           res.status(500).json({ code: 'error', data: {}, message: error });
@@ -214,8 +278,7 @@ const modelController = {
       console.error('generateCode error: ', error);
       res.status(500).json({ error: error.message });
     }
-  }
-
+  },
 
 };
 const toLowerCase = str => str.toLowerCase();

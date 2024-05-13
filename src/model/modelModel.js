@@ -65,7 +65,7 @@ const Model = {
       INSERT INTO code_model (engName, remark, created_at, moduleId,properties)
       VALUES (?, ?, CURRENT_TIMESTAMP, ?, ?)
     `;
-    db.run(sql, [engName, remark, moduleId], (err) => {
+    db.run(sql, [engName, remark, moduleId, properties], (err) => {
       if (err) {
         callback(err);
         return;
