@@ -6,7 +6,7 @@ class SQLBase {
   }
 
   /**
-   * 将给定数据插入到数据库表中，并返回对应的 SQL 查询和值。
+   * 新增数据SQL语句构建。
    * @param {object} data 要插入的数据对象，键为列名，值为要插入的值。
    * @returns {object} 包含 SQL 查询和对应值的对象。
    * @throws {Error} 如果输入数据或表结构无效，则抛出错误。
@@ -50,30 +50,99 @@ class SQLBase {
   }
 
 
-  // 根据查询项查询数据和分页查询合并成一个函数
-  selectRecordsWithFilterAndPagination(filters, page, pageSize) {
-    let p = Number(page) || 1;
-    let ps = Number(pageSize) || 10;
-    const conditions = [];
-    const values = [];
+  /**
+   * 支持分页和条件查询的 SQL 查询语句构建。
+   * @param {Object} filters - 过滤器对象，键为列名，值为要匹配的值。
+   * @param {number} page - 要查询的页码，默认为 1。
+   * @param {number} pageSize - 每页的数量，默认为 10。
+   * @returns {Object} - 包含构建的 SQL 查询语句和参数值数组的对象。
+   */
+  buildFilteredPaginationQuery(filters, page, pageSize) {
+    // 将页码和每页大小转换为数字，如果未提供，则默认为1和10
+    const p = Number(page) || 1;
+    const ps = Number(pageSize) || 10;
+    const conditions = []; // 存储条件语句的数组
+    const values = []; // 存储参数值的数组
 
+    // 遍历过滤器对象的键值对
     for (const key in filters) {
-      if (typeof filters[key] === 'string') {
-        conditions.push(`${key} = ?`);
-        values.push(filters[key]);
-      } else {
-        conditions.push(`${filters[key].column} = ?`);
-        values.push(filters[key].value);
+      if (filters[key] !== '') { // 检查过滤器的值是否为空字符串
+        conditions.push(`${key} = ?`); // 添加等值查询条件
+        values.push(filters[key]); // 将过滤器的值添加到参数值数组中
       }
     }
 
-
+    // 计算偏移量
     const offset = (p - 1) * ps;
-    const sql = `SELECT * FROM ${this.tableName} WHERE ${conditions.join(' AND ')} LIMIT ?, ?`;
-    values.push(offset, ps);
 
+    let sql = `SELECT * FROM ${this.tableName}`; // 初始 SQL 查询语句
+
+    // 如果存在过滤条件，则在查询语句中添加 WHERE 子句
+    if (conditions.length > 0) {
+      sql += ` WHERE ${conditions.join(' AND ')}`;
+    }
+
+    sql += ` LIMIT ?, ?`; // 添加分页限制
+    values.push(offset, ps); // 将偏移量和每页大小添加到参数值数组中
+
+    // 返回构建的 SQL 查询语句和参数值数组
     return { sql, values };
   }
+
+
+  /**
+   * 构建查询所有记录的 SQL 查询语句。
+   * @returns {Object} - 包含构建的 SQL 查询语句和空参数值数组的对象。
+   */
+  selectAllRecords() {
+    const sql = `SELECT * FROM ${this.tableName}`;
+    return { sql, values: [] };
+  }
+
+
+  /**
+   * 构建更新数据SQL语句。
+   * @param {number} id - 要更新的记录的 ID。
+   * @param {object} data - 包含要更新的列及其对应新值的对象。
+   * @returns {object} - 返回一个包含 SQL 查询字符串和参数值数组的对象。
+   */
+  updateRecord(id, data) {
+    // 输出日志，以便调试
+
+    // 用于存储更新的列和对应的值的数组
+    const updates = [];
+
+    // 遍历表结构中的每一列
+    for (const column of this.tableStructure) {
+      // 如果传入的数据中包含当前列名，则将该列添加到更新列表中
+      if (data.hasOwnProperty(column.name)) {
+        updates.push(`${column.name} = ?`);
+      }
+    }
+
+    // 构建 SQL 更新语句
+    const sql = `UPDATE ${this.tableName} SET ${updates.join(', ')} WHERE id = ?`;
+
+    // 仅将传递的值添加到参数值数组
+    const values = updates.map(update => data[update.split(' ')[0]]);
+
+    // 将记录 ID 添加到参数值数组的末尾
+    values.push(id);
+
+    // 返回包含 SQL 查询字符串和参数值数组的对象
+    return { sql, values };
+  }
+
+
+
+  // 删除记录
+  deleteRecord(id) {
+    const sql = `DELETE FROM ${this.tableName} WHERE id = ?`;
+    return { sql, values: [id] };
+  }
+
+
+
 
 
   /**
@@ -86,38 +155,6 @@ class SQLBase {
     const sql = `SELECT * FROM ${this.tableName} WHERE id = ?`;
     return { sql, values: [id] };
   }
-
-
-  // 更新记录
-  updateRecord(id, data) {
-    const updates = [];
-
-    for (const column of this.tableStructure) {
-      if (data.hasOwnProperty(column.name)) {
-        updates.push(`${column.name} = ?`);
-      }
-    }
-
-    const sql = `UPDATE ${this.tableName} SET ${updates.join(', ')} WHERE id = ?`;
-    const values = this.tableStructure.map(column => data[column.name] || null);
-    values.push(id);
-
-    return { sql, values };
-  }
-
-  // 删除记录
-  deleteRecord(id) {
-    const sql = `DELETE FROM ${this.tableName} WHERE id = ?`;
-    return { sql, values: [id] };
-  }
-
-  // 查询全部数据
-  selectAllRecords() {
-    const sql = `SELECT * FROM ${this.tableName}`;
-    return { sql, values: [] };
-  }
-
-
 }
 
 module.exports = {

@@ -44,17 +44,36 @@ const User = {
       const { sql, values } = userCRUD.create(params);
       db.run(sql, values, callback);
     } catch (error) {
+      console.log('error: ', error);
     }
   },
   // 分页查询用户
   getByPage: ({ page, pageSize, ...filters }, callback) => {
     try {
-      const { sql, values } = userCRUD.selectRecordsWithFilterAndPagination({ ...filters }, page, pageSize);
+      const { sql, values } = userCRUD.buildFilteredPaginationQuery({ ...filters }, page, pageSize);
       db.all(sql, values, callback);
     } catch (error) {
       console.log('error: ', error);
     }
+  },
 
+  // 获取所有用户
+  getAll: (callback) => {
+    try {
+      const { sql, values } = userCRUD.selectAllRecords();
+      db.all(sql, values, callback);
+    } catch (error) {
+      console.log('error: ', error);
+    }
+  },
+
+  // 更新用户信息
+  update: (id, data, callback) => {
+    try {
+      const { sql, values } = userCRUD.updateRecord(id, data);
+      db.run(sql, values, callback);
+    } catch (error) {
+    }
   },
 }
 

@@ -1,11 +1,27 @@
 const User = require('../model/userModel');
 
 const userController = {
+  // 创建用户
+  createUser: (req, res) => {
+    // 从请求体中获取用户名和邮箱
+    // 调用 User 模型中的 create 方法创建新用户
+    User.create(req.query, (err) => {
+      if (err) {
+        // 如果出现错误，返回 500 状态码并发送错误消息
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      // 如果成功创建用户，发送成功消息
+      res.send('User created successfully');
+    });
+  },
+
   // 分页查询用户
   getByPage: (req, res) => {
     try {
       // 调用 User 模型中的 getByPage 方法进行分页查询
       User.getByPage(req.query, (err, users) => {
+        console.log('err: ', err);
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
           res.status(500).json({ error: err.message });
@@ -34,20 +50,7 @@ const userController = {
       res.json(users);
     });
   },
-  // 创建用户
-  createUser: (req, res) => {
-    // 从请求体中获取用户名和邮箱
-    // 调用 User 模型中的 create 方法创建新用户
-    User.create(req.query, (err) => {
-      if (err) {
-        // 如果出现错误，返回 500 状态码并发送错误消息
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      // 如果成功创建用户，发送成功消息
-      res.send('User created successfully');
-    });
-  },
+
 
 
   // 更新用户信息
@@ -55,18 +58,8 @@ const userController = {
     try {
       // 获取要更新的用户的 ID
       const id = Number(req.params.id);
-
-      // 检查是否提供了要更新的用户名和邮箱
-      if (!req.body.username || !req.body.email) {
-        res.status(400).json({ error: "Missing username or email in request body" });
-        return;
-      }
-
-      // 从请求体中获取新的用户名和邮箱
-      const { username, email } = req.body;
-
       // 调用 User 模型中的 update 方法更新用户信息
-      User.update(id, username, email, (err) => {
+      User.update(id, req.query, (err) => {
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
           res.status(500).json({ error: err.message });
