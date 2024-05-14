@@ -13,6 +13,7 @@ const userController = {
         }
         // 如果成功获取用户，以 JSON 格式返回用户数据
         res.json(users);
+        console.log('users: ', users);
       });
     } catch (error) {
       console.log('error: ', error);
@@ -47,6 +48,8 @@ const userController = {
       res.send('User created successfully');
     });
   },
+
+
   // 更新用户信息
   updateUser: (req, res) => {
     try {
