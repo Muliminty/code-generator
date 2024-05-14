@@ -50,12 +50,13 @@ class SQLBase {
   }
 
 
+
   /**
-   * 支持分页和条件查询的 SQL 查询语句构建。
-   * @param {Object} filters - 过滤器对象，键为列名，值为要匹配的值。
-   * @param {number} page - 要查询的页码，默认为 1。
-   * @param {number} pageSize - 每页的数量，默认为 10。
-   * @returns {Object} - 包含构建的 SQL 查询语句和参数值数组的对象。
+   * 构建带有过滤和分页功能的查询。
+   * @param {object} filters - 包含过滤条件的对象。
+   * @param {number} page - 要返回的页码。
+   * @param {number} pageSize - 每页的大小。
+   * @returns {object} - 返回一个包含 SQL 查询字符串和参数值数组的对象。
    */
   buildFilteredPaginationQuery(filters, page, pageSize) {
     // 将页码和每页大小转换为数字，如果未提供，则默认为1和10
@@ -66,7 +67,8 @@ class SQLBase {
 
     // 遍历过滤器对象的键值对
     for (const key in filters) {
-      if (filters[key] !== '') { // 检查过滤器的值是否为空字符串
+      // 检查过滤器的值是否为空字符串且表结构中存在该字段
+      if (filters[key] !== '' && this.tableStructure.find(column => column.name === key)) {
         conditions.push(`${key} = ?`); // 添加等值查询条件
         values.push(filters[key]); // 将过滤器的值添加到参数值数组中
       }
@@ -88,6 +90,7 @@ class SQLBase {
     // 返回构建的 SQL 查询语句和参数值数组
     return { sql, values };
   }
+
 
 
   /**

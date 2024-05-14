@@ -8,7 +8,7 @@ const moduleController = {
       const page = Number(req.query.page) || 0;
       const pageSize = Number(req.query.pageSize) || 10;
       // 调用 Model 模型中的 getByPage 方法进行分页查询
-      Module.getByPage(page, pageSize, (err, props) => {
+      Module.getByPage({ page, pageSize, ...req.query }, (err, props) => {
         if (err) {
           // 如果出现错误，返回 500 状态码并发送错误消息
           return res.status(500).json({ code: 'error', message: err.message });
