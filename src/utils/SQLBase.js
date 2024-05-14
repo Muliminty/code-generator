@@ -148,11 +148,6 @@ class SQLBase {
     return { sql, values: [id] };
   }
 
-
-
-
-
-
   /**
    * 从数据库中读取指定 ID 的记录。
    * @param {number} id 要读取的记录的 ID。
