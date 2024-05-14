@@ -40,10 +40,16 @@ const userCRUD = new SQLBase('users', USER_TABLE);
 
 const User = {
   create: (params, callback) => {
-    const { sql, values } = userCRUD.create(params);
-    console.log('values: ', values);
-    console.log('sql: ', sql);
-    db.run(sql, values, callback);
+    console.log('params: ', params);
+    try {
+      const { sql, values } = userCRUD.create(params);
+      console.log('values: ', values);
+      console.log('sql: ', sql);
+      db.run(sql, values, callback);
+    } catch (error) {
+      console.log('error: create', error);
+
+    }
   },
   // 分页查询用户
   getByPage: ({ page, pageSize, ...filters }, callback) => {
