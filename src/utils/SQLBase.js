@@ -135,11 +135,19 @@ class SQLBase {
 
 
 
-  // 删除记录
+  /**
+   * 删除记录。
+   * @param {number} id - 要删除的记录的 ID。
+   * @returns {object} - 返回一个包含 SQL 查询字符串和参数值数组的对象，用于执行删除操作。
+   */
   deleteRecord(id) {
+    // 构建 SQL 删除语句
     const sql = `DELETE FROM ${this.tableName} WHERE id = ?`;
+
+    // 返回包含 SQL 查询字符串和记录 ID 的参数值数组的对象
     return { sql, values: [id] };
   }
+
 
 
 

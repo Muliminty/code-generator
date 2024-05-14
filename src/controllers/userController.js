@@ -88,6 +88,22 @@ const userController = {
       // 如果成功删除用户，发送成功消息
       res.send('User deleted successfully');
     });
+  },
+
+  // 详情
+  getDetailById: (req, res) => {
+    // 获取要查询的用户的 ID
+    const id = req.params.id;
+    // 调用 User 模型中的 getById 方法查询用户
+    User.getDetailById(id, (err, user) => {
+      if (err) {
+        // 如果出现错误，返回 500 状态码并发送错误消息
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      // 如果成功查询用户，以 JSON 格式返回用户数据
+      res.json(user);
+    });
   }
 };
 
