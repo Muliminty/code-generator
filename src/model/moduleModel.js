@@ -62,27 +62,30 @@ const Module = {
   getByPage: ({ page, pageSize, ...filters }, callback) => {
     try {
       // 查询总记录数
-      const { sql, values } = SQL.selectAllRecords();
-      db.all(sql, values, (err, row) => {
+      const countQuery = SQL.selectAllRecords();
+      db.all(countQuery.sql, countQuery.values, (err, totalCountRows) => {
         if (err) {
           callback(err, null);
-        } else {
-          const totalCount = row.length;
-
-          const { sql, values } = SQL.buildFilteredPaginationQuery({ ...filters }, page, pageSize);
-          db.all(sql, values, (err, rows) => {
-            if (err) {
-              callback(err, null);
-            } else {
-              callback(null, { totalCount, list: rows });
-            }
-          });
+          return;
         }
+
+        const totalCount = totalCountRows.length;
+        const paginationQuery = SQL.buildFilteredPaginationQuery({ ...filters }, page, pageSize);
+
+        db.all(paginationQuery.sql, paginationQuery.values, (err, rows) => {
+          if (err) {
+            callback(err, null);
+            return;
+          }
+
+          callback(null, { totalCount, list: rows });
+        });
       });
     } catch (error) {
       console.log('error: ', error);
     }
   },
+
   // 获取所有模块
   getAll: (callback) => {
     // 使用 db 模块的 all 方法执行 SQL 查询，从数据库中获取所有模块数据
