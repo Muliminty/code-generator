@@ -1,8 +1,0 @@
-{{dataSource.properties}}0000=查询成功
-{{dataSource.properties}}0001=查询失败
-{{dataSource.properties}}0002=删除成功
-{{dataSource.properties}}0003=删除失败
-{{dataSource.properties}}0004=更新成功
-{{dataSource.properties}}0005=更新失败
-{{dataSource.properties}}0006=添加成功
-{{dataSource.properties}}0007=添加失败
